@@ -11,7 +11,9 @@ public partial class AccountBooks
 
     public string? account_book_type { get; set; }
 
-    public decimal? initial_balance { get; set; }
+    public int? initial_balance { get; set; }
+
+    public string? account_book_status { get; set; }
 
     public int? user_id { get; set; }
 

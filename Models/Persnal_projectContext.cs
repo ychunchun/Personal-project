@@ -32,8 +32,8 @@ public partial class Persnal_projectContext : DbContext
             entity.HasKey(e => e.account_book_id).HasName("PK__AccountB__89A772AA58C8701F");
 
             entity.Property(e => e.account_book_name).HasMaxLength(255);
+            entity.Property(e => e.account_book_status).HasMaxLength(100);
             entity.Property(e => e.account_book_type).HasMaxLength(255);
-            entity.Property(e => e.initial_balance).HasColumnType("decimal(18, 2)");
 
             entity.HasOne(d => d.user).WithMany(p => p.AccountBooks)
                 .HasForeignKey(d => d.user_id)
@@ -74,6 +74,7 @@ public partial class Persnal_projectContext : DbContext
         {
             entity.HasKey(e => e.member_id).HasName("PK__Members__B29B853445EDF7CA");
 
+            entity.Property(e => e.member_status).HasMaxLength(100);
             entity.Property(e => e.role).HasMaxLength(50);
 
             entity.HasOne(d => d.account_book).WithMany(p => p.Members)

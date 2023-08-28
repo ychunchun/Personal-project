@@ -66,9 +66,9 @@ namespace Personal_project.Controllers
                         ? newTransactions.transaction_date.Value.ToString("yyyy-MM-dd")
                         : string.Empty, // 先確認 transaction_date 是否有值，然後再進行格式化
                     details = newTransactions.details,
-                    account_book_id = newTransactions.account_book_id, // 先写死，之后有新增帐本页再改！  newTransactions.account_book_id,
+                    account_book_id = newTransactions.account_book_id, 
                     account_book_name = accountBook != null ? accountBook.account_book_name : "",
-                    current_time = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, taipeiTimeZone).ToString("yyyy-MM-dd HH:mm"), // 使用当前系统时间
+                    current_time = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, taipeiTimeZone).ToString("yyyy-MM-dd HH:mm"), // 使用當前系統時間
                     operation_type = "Add"
                 };
 

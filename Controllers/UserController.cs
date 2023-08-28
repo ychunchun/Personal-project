@@ -9,6 +9,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
 using Newtonsoft.Json;
 using Microsoft.AspNet.SignalR;
+using System.Security.Claims;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace YourProject.Controllers
 {
@@ -91,12 +94,60 @@ namespace YourProject.Controllers
                 // Generate and return the access token
                 string accessToken = GenerateAccessToken(user.email);
 
+                //根據accountbookId在DB找相關的user
+                var identity = HttpContext.User.Identity as ClaimsIdentity; 
+                var accountbookIdClaim=identity.FindFirst("accountBookId");
+                Console.WriteLine("New Member Created:", accountbookIdClaim);
+
+                //如果有接收到關於accountbook的Id，就給user相對的共享帳本
+                if(accountbookIdClaim!=null){
+                    string accountbookId = accountbookIdClaim.Value; // 獲取 accountbookId 的值
+                    Console.WriteLine("New Member Created:", accountbookId);
+
+                    // 將關聯寫入Members table
+                    var newMember = new Members
+                    {
+                        account_book_id = int.Parse(accountbookId),
+                        user_id = user.user_id,
+                        role = "editor",
+                        member_status="live"
+                    };
+                    _dbcontext.Members.Add(newMember);
+                    _dbcontext.SaveChanges();
+                }
+
+                // Check if the user_id exists in AccounBooks
+                var exsitingAccountBook=_dbcontext.AccountBooks.SingleOrDefault(ab=>ab.user_id==user.user_id && ab.account_book_type == "main");
+                if(exsitingAccountBook==null){
+                    //Create a new AccountBook record
+                    var newAccountBook=new AccountBooks{
+                        user_id=user.user_id,
+                        account_book_name="Main",
+                        account_book_type="main",
+                        initial_balance=0,
+                    };
+                    _dbcontext.AccountBooks.Add(newAccountBook);
+                    _dbcontext.SaveChanges();
+
+
+                    //Use the newly generated id for Members record
+                    var newMember=new Members{
+                        account_book_id=newAccountBook.account_book_id,
+                        user_id=user.user_id,
+                        role="admin"
+                    };
+                    _dbcontext.Members.Add(newMember);
+                    _dbcontext.SaveChanges();
+                }
+
+                
+
                 var response = new
                 {
                     data = new
                     {
                         access_token = accessToken,
-                        access_expired = 3600,
+                        access_expired = 36000,
                         user = new
                         {
                             user_id = user.user_id,
@@ -112,6 +163,9 @@ namespace YourProject.Controllers
             }
             else if (input.provider.ToLower() == "facebook")
             {
+            }
+            return BadRequest(new { message = "Failed to retrieve Facebook user profile" });
+        }
                 // var accessToken = input.access_token;
 
                 // // 發http
@@ -193,9 +247,7 @@ namespace YourProject.Controllers
                 // {
                 //     return BadRequest(new { message = "Failed to retrieve Facebook user profile" });
                 // }
-            }
-            return BadRequest(new { message = "Failed to retrieve Facebook user profile" });
-        }
+           
 
         [Authorize] //經過驗證的user
         [HttpGet("userprofile")]
@@ -247,7 +299,7 @@ namespace YourProject.Controllers
                 issuer: "http://localhost:5108",
                 audience: "http://localhost:5108",
                 claims: claims,
-                expires: DateTime.UtcNow.AddSeconds(3600),
+                expires: DateTime.UtcNow.AddSeconds(36000),
                 signingCredentials: credentials
             );
 

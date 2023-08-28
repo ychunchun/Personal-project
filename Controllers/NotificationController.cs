@@ -7,6 +7,8 @@ using Personal_project.Models;
 using System.Globalization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Personal_project.Controllers
 {
@@ -37,9 +39,10 @@ namespace Personal_project.Controllers
             }
 
             var notifications = _dbcontext.Notifications
-                .Where(n => n.target == user.user_id) // Filter by target user_id
+                .Where(n => n.target == user.user_id && n.notification_status=="live") // Filter by target user_id
                 .Select(n => new
                 {
+                    NotificationId=n.notification_id,
                     TransactionId = n.transaction_id,
                     OperationType = n.operation_type,
                     CurrentTime = n.current_time.HasValue ? n.current_time.Value.ToString("MM/dd HH:mm") : "", // Format if not null
@@ -59,12 +62,12 @@ namespace Personal_project.Controllers
 
 
         [HttpPost("NotificationStatus")]
-        public async Task<ActionResult> NotificationStatus(int notificationId)
+        public async Task<ActionResult> NotificationStatus([FromBody] NotificationDTO dto)
         {
             try
             {
                 var notification = await _dbcontext.Notifications
-                    .FirstOrDefaultAsync(n => n.notification_id == notificationId);
+                    .FirstOrDefaultAsync(n => n.notification_id == dto.NotificationId);
 
                 if (notification != null)
                 {

@@ -34,40 +34,50 @@ async function fetchAndDisplayNotifications() {
       const icon = document.createElement("i");
       icon.className = "fa fa-trash";
 
-      // 存储 notificationId 在元素的 dataset 中
-      icon.dataset.notificationId = notification.notification_id;
+      // <div> 元素，儲存notificationId
+      const notificationIdDiv = document.createElement("div");
+      notificationIdDiv.style.display = "none"; // 初始時隱藏
+      notificationIdDiv.textContent = notification.notificationId;
 
+      icon.appendChild(notificationIdDiv);
       listItem.appendChild(notificationSpan);
       listItem.appendChild(icon);
 
-      // 將list加到通知容器中
+      // 將list加到通知container
       container.appendChild(listItem);
 
-      // 添加事件监听器到 listItem
       listItem.addEventListener("click", async (event) => {
-        const notificationId =
-          event.currentTarget.querySelector("i").dataset.notificationId;
-        console.log(
-          "Clicked on trash icon for notification with ID:",
-          notificationId
-        );
+        // 獲取 <i> 元素的 v
+        const notificationIdString =
+          event.currentTarget.querySelector("i > div").textContent;
+        const notificationId = parseInt(notificationIdString, 10); // 字串轉整數
 
-        // 将 notificationId 作为请求参数发送到状态 API
-        const response = await fetch("/api/Notification/NotificationStatus", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + accessToken,
-          },
-          body: JSON.stringify({
-            notificationId: notificationId,
-          }),
+        //視窗提醒是否刪除
+        const result = await Swal.fire({
+          title: "Confirm Deletion",
+          text: "Do you want to delete this message?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Yes",
+          cancelButtonText: "No",
         });
 
-        if (response.ok) {
-          // 成功处理状态更新
-        } else {
-          // 处理错误情况
+        //發送notificationId為參數到API
+        if (result.isConfirmed) {
+          const response = await fetch("/api/Notification/NotificationStatus", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + accessToken,
+            },
+            body: JSON.stringify({
+              notificationId: notificationId,
+            }),
+          });
+
+          if (response.ok) {
+            location.reload(); //刷新當前頁
+          }
         }
       });
     });

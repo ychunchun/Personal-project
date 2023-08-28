@@ -1,4 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // Get the token from the URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get("token");
+
+  // Store the token in localStorage
+  if (token) {
+    localStorage.setItem("accessToken", token);
+  }
+
   const loginButton = document.querySelector(".btn-info"); // 選擇登入按鈕
   loginButton.addEventListener("click", async function (event) {
     event.preventDefault(); // 阻止表單的預設提交行為
@@ -12,12 +21,25 @@ document.addEventListener("DOMContentLoaded", function () {
       password: password,
     };
 
+    // 檢查 localStorage 中是否存在token
+    const accessToken = localStorage.getItem("accessToken");
+
+    // 定義 API 請求的 headers
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
+    // 如果token存在，則加到 headers 中
+    if (accessToken) {
+      headers["Authorization"] = "Bearer " + accessToken;
+      console.log("accessToken", accessToken);
+    }
+    console.log("accessToken not found");
+
     try {
       const response = await fetch("/api/User/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: headers,
         body: JSON.stringify(loginData),
       });
 

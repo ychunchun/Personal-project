@@ -13,6 +13,8 @@ public partial class Members
 
     public string? role { get; set; }
 
+    public string? member_status { get; set; }
+
     public virtual AccountBooks? account_book { get; set; }
 
     public virtual Users? user { get; set; }
