@@ -21,7 +21,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         throw new Error("API request failed");
       }
 
-      const accountBooks = await response.json();
+      const responseData = await response.json();
+      const accountBooks = responseData.accountBooks;
 
       accountBooks.forEach((accountBook) => {
         const option = document.createElement("option");

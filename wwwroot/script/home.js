@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // 預設值
       let selectedAccountBookName = accountNameSelect.options[0].value; //下拉選單第一個選項做為預設
-      console.log("cppl:", selectedAccountBookName);
+      //console.log("cppl:", selectedAccountBookName);
       fetchTransactionsIfNeeded();
       // 獲取選定的AccountBookName
 

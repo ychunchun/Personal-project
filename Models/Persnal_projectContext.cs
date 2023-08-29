@@ -54,8 +54,11 @@ public partial class Persnal_projectContext : DbContext
         {
             entity.HasKey(e => e.history_id).HasName("PK__History__096AA2E9F63F8FCD");
 
+            entity.Property(e => e.category_name).HasMaxLength(150);
+            entity.Property(e => e.category_type).HasMaxLength(150);
             entity.Property(e => e.operation_date).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.operation_type).HasMaxLength(50);
+            entity.Property(e => e.user_name).HasMaxLength(100);
 
             entity.HasOne(d => d.account_book).WithMany(p => p.History)
                 .HasForeignKey(d => d.account_book_id)

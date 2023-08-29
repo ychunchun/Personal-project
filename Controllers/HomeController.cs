@@ -75,6 +75,7 @@ namespace Personal_project.Controllers
             .Select(t => new
             {
                 CategoryName = t.category.category_name,
+                CategoryType = t.category.category_type,
                 Amount = t.amount,
                 Day=t.transaction_date,
                 Details=t.details,
@@ -89,6 +90,7 @@ namespace Personal_project.Controllers
             var filteredWithTotal = filtered.Select(t => new
             {
                 CategoryName = t.CategoryName,
+                CategoryType = t.CategoryType,
                 Amount = t.Amount,
                 AccountBookName=t.AccountBookName,
                 AccountBookId=t.AccountBookId,
@@ -98,6 +100,49 @@ namespace Personal_project.Controllers
                 TotalAmount = totalAmount,
                 DateRangeText = dateRangeText
             }).ToList();
+
+
+
+            
+
+
+            // 計算所有類別的匯總數據
+            // var allCategoriesGroupedByCategory = _dbcontext.Transactions
+            //     .Include(t => t.category)
+            //     .Where(t => t.account_book_id == targetAccountBookId && t.transaction_status == "live")
+            //     .GroupBy(t => new{t.category.category_type, t.category.category_name})
+            //     .Select(group => new
+            //     {
+            //         CategoryType = group.Key.category_type,
+            //         CategoryName = group.Key.category_name,
+            //         //CategoryName = group.Key,
+            //         TotalAmount = group.Sum(t => t.amount),
+            //         TransactionCount = group.Count()
+            //     })
+            //     .GroupBy(group => group.CategoryType) // 第一层按照类型分组
+            //     .Select(groupByType => new
+            //     {
+            //         CategoryType = groupByType.Key,
+            //         Categories = groupByType
+            //             .GroupBy(group => group.CategoryName) // 第二层按照类别名分组
+            //             .Select(groupByCategory => new
+            //             {
+            //                 CategoryName = groupByCategory.Key,
+            //                 TotalAmount = groupByCategory.Sum(item => item.TotalAmount),
+            //                 TransactionCount = groupByCategory.Sum(item => item.TransactionCount)
+            //             })
+            //             .ToList()
+            //     })
+            //     .ToList();
+
+            // var combinedData = new
+            // {
+            //     FilteredWithTotal = filteredWithTotal,
+            //     AllCategoriesData = allCategoriesGroupedByTime
+            // };
+
+            //return Ok(combinedData);}}
+
 
 
         return Ok(filteredWithTotal);}}

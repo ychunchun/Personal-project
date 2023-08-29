@@ -17,6 +17,14 @@ public partial class History
 
     public int? account_book_id { get; set; }
 
+    public int? amount { get; set; }
+
+    public string? category_type { get; set; }
+
+    public string? category_name { get; set; }
+
+    public string? user_name { get; set; }
+
     public virtual AccountBooks? account_book { get; set; }
 
     public virtual Transactions? transaction { get; set; }

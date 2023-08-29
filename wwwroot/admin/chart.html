@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Stack Bar Chart Example</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div style="width: 40%; margin: auto">
+      <canvas id="stackBarChart"></canvas>
+    </div>
+
+    <script>
+      var ctx = document.getElementById("stackBarChart").getContext("2d");
+      var stackBarChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: ["Label 1", "Label 2", "Label 3"],
+          datasets: [
+            {
+              label: "Data 1",
+              data: [10, 20, 30],
+              backgroundColor: "rgba(255, 99, 132, 0.5)",
+            },
+            {
+              label: "Data 2",
+              data: [15, 25, 35],
+              backgroundColor: "rgba(54, 162, 235, 0.5)",
+            },
+            {
+              label: "Data 3",
+              data: [15, 25, 35],
+              backgroundColor: "rgba(255, 99, 132, 0.5)",
+            },
+          ],
+        },
+        options: {
+          scales: {
+            x: {
+              stacked: true,
+            },
+            y: {
+              stacked: true,
+            },
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

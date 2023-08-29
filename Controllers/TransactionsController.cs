@@ -72,6 +72,26 @@ namespace Personal_project.Controllers
                     operation_type = "Add"
                 };
 
+
+                // 將帳目資訊新增到 History table
+                var newHistory = new History
+                {
+                    
+                    transaction_id = result.transaction_id,
+                    operation_type = "Add",
+                    operation_date = newTransactions.transaction_date,
+                    user_name = result.user_name,
+                    user_id = result.user_id,
+                    account_book_id = result.account_book_id,
+                    amount = result.amount,
+                    category_name = result.category_name,
+                    category_type = result.category_type,
+                };
+
+                _dbcontext.History.Add(newHistory);
+                await _dbcontext.SaveChangesAsync();
+
+
                 // 獲取帳本成員人數
                 var membersIds = await _dbcontext.Members
                     .Where(m => m.account_book_id == newTransactions.account_book_id)
@@ -137,13 +157,32 @@ namespace Personal_project.Controllers
             {
                 var updatestatus = await _dbcontext.Transactions
                     .FirstOrDefaultAsync(t => t.transaction_id == transactionId);
+                Console.WriteLine("updatestatus",updatestatus);
 
                 if (updatestatus != null)
                 {
                     updatestatus.transaction_status = "delete";
                     await _dbcontext.SaveChangesAsync();
 
+                     // 將帳目資訊新增到 History table
+                    // var newHistory = new History
+                    // {                      
+                    //     transaction_id = updatestatus.transaction_id,
+                    //     operation_type = "Delete",
+                    //     operation_date = updatestatus.transaction_date,
+                    //     user_name = updatestatus.user.user_name,
+                    //     user_id = updatestatus.user.user_id,
+                    //     account_book_id = updatestatus.account_book_id,
+                    //     amount = updatestatus.amount,
+                    //     category_name = updatestatus.category.category_name,
+                    //     category_type = updatestatus.category.category_type,
+                    // };
+
+                    // _dbcontext.History.Add(newHistory);
+                    // await _dbcontext.SaveChangesAsync();
+
                     // 成功刪除狀態後，並且call ProcessNotification function 解析 Token
+                    //await AddToHistoryTable(transactionId);
                     await ProcessNotification(transactionId);
 
                     return Ok();
@@ -155,10 +194,35 @@ namespace Personal_project.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Exception: " + ex.Message);
+                Console.WriteLine("Exception: " + ex.ToString());
                 return BadRequest(ex.Message);
             }
         }
+
+        // private async Task AddToHistoryTable(int transactionId)
+        // {
+        //     var savetohistory = await _dbcontext.History
+        //         .Include(t => t.user)  
+        //         .FirstOrDefaultAsync(t => t.transaction_id == transactionId);
+
+
+        //     var newHistory = new History
+        //     {
+        //         transaction_id = savetohistory.transaction_id,
+        //         operation_type = "Delete",
+        //         operation_date = savetohistory.date,
+        //         user_name = savetohistory.user.user_name,
+        //         user_id = savetohistory.user.user_id,
+        //         account_book_id = savetohistory.account_book_id,
+        //         amount = savetohistory.amount,
+        //         category_name = savetohistory.category.category_name,
+        //         category_type = savetohistory.category.category_type,
+        //     };
+
+        //     _dbcontext.History.Add(newHistory);
+        //     await _dbcontext.SaveChangesAsync();
+        // }
+
 
         private async Task ProcessNotification(int transactionId)
         {
@@ -182,45 +246,62 @@ namespace Personal_project.Controllers
                     .FirstOrDefaultAsync(t => t.transaction_id == transactionId);
 
                 if (transactionInfo != null)
+                {
+                    // 獲取帳本中所有成員的id
+                    var membersIds = await _dbcontext.Members
+                        .Where(m => m.account_book_id == transactionInfo.account_book_id)
+                        .Select(m => m.user_id)
+                        .ToListAsync();
+
+                    Console.WriteLine("Members IDs: " + string.Join(", ", membersIds));
+
+                    // 判斷帳本是否有其他成員
+                    if (membersIds.Any())
                     {
-                        // 獲取帳本中所有成員的id
-                        var membersIds = await _dbcontext.Members
-                            .Where(m => m.account_book_id == transactionInfo.account_book_id)
-                            .Select(m => m.user_id)
-                            .ToListAsync();
+                        var targetUserIds = new List<int>(membersIds.Select(id => id.Value));
+                        targetUserIds.Remove(user.user_id);
 
-                        Console.WriteLine("Members IDs: " + string.Join(", ", membersIds));
-
-                        // 判斷帳本是否有其他成員
-                        if (membersIds.Any())
+                        foreach (var targetUserId in targetUserIds)
                         {
-                            var targetUserIds = new List<int>(membersIds.Select(id => id.Value));
-                            targetUserIds.Remove(user.user_id);
-
-                            foreach (var targetUserId in targetUserIds)
+                            var newNotification = new Notifications
                             {
-                                var newNotification = new Notifications
-                                {
-                                    user_id = user.user_id,
-                                    target = targetUserId,
-                                    transaction_id = transactionInfo.transaction_id,
-                                    operation_type = "Delete",
-                                    notification_status = "live",
-                                    current_time = DateTime.Now,
-                                    user_name = transactionInfo.user.user_name,
-                                    amount = transactionInfo.amount,
-                                    category_name = transactionInfo.category.category_name,
-                                    category_type = transactionInfo.category.category_type,
-                                    account_book_name = transactionInfo.account_book.account_book_name,
-                                    account_book_id = transactionInfo.account_book_id,
-                                };
-                                
-                                _dbcontext.Notifications.Add(newNotification);
-                            }
-                            await _dbcontext.SaveChangesAsync();
+                                user_id = user.user_id,
+                                target = targetUserId,
+                                transaction_id = transactionInfo.transaction_id,
+                                operation_type = "Delete",
+                                notification_status = "live",
+                                current_time = DateTime.Now,
+                                user_name = transactionInfo.user.user_name,
+                                amount = transactionInfo.amount,
+                                category_name = transactionInfo.category.category_name,
+                                category_type = transactionInfo.category.category_type,
+                                account_book_name = transactionInfo.account_book.account_book_name,
+                                account_book_id = transactionInfo.account_book_id,
+                            };
+                            
+                            _dbcontext.Notifications.Add(newNotification);
                         }
+                        await _dbcontext.SaveChangesAsync();
                     }
+
+                    //新增資料到History table
+                    var newHistory = new History
+                    {                      
+                        transaction_id = transactionInfo.transaction_id,
+                        operation_type = "Delete",
+                        operation_date = transactionInfo.transaction_date,
+                        user_name = transactionInfo.user.user_name,
+                        user_id = user.user_id,
+                        account_book_id = transactionInfo.account_book_id,
+                        amount = transactionInfo.amount,
+                        category_name = transactionInfo.category.category_name,
+                        category_type = transactionInfo.category.category_type,
+                    };
+
+                    _dbcontext.History.Add(newHistory);
+                    await _dbcontext.SaveChangesAsync();
                 }
+            }
             catch (Exception ex)
             {
                 Console.WriteLine("Exception: " + ex.Message);

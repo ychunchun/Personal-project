@@ -51,7 +51,7 @@ namespace Personal_project.Controllers
                         AccountBookName = accountBook.account_book_name,
                         AccountBookType = accountBook.account_book_type,
                         InitialBalance = accountBook.initial_balance,
-                         AccountBookStatus = accountBook.account_book_status,
+                        AccountBookStatus = accountBook.account_book_status,
                     })
                 .Where(a => a.AccountBookStatus == "live")
                 .ToListAsync(); 
