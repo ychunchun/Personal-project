@@ -5,6 +5,7 @@ public class AccountBookDTO
     public string AccountBookType { get; set; }
     public int? InitialBalance { get; set; }
     public int? Profit { get; set; }
+    public int? AdminUser { get; set; }
     public List<MemberRoleAndUserNameDTO> Members { get; set; }
 }
 

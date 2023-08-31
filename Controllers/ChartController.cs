@@ -30,7 +30,7 @@ namespace Personal_project.Controllers
             DateTime startDate;
             DateTime endDate;
 
-            // 根據選定的 dateRange 計算 startDate
+            // 根據 dateRange 設定 startDate 和 endDate
             switch(dateRange){
                 case "day":
                     startDate=currentDate.Date;
@@ -63,7 +63,7 @@ namespace Personal_project.Controllers
                 .Select(ab => ab.account_book_id)
                 .FirstOrDefault();
 
-            //var startDateOnly = startDate.Date; // 只包含日期部分的 startDate
+            // 找到符合條件的transaction
             var filtered = _dbcontext.Transactions
             .Include(t => t.category) //category是資料模型的導航屬性，Categories是資料表名
             .Include(t => t.account_book)
@@ -81,7 +81,7 @@ namespace Personal_project.Controllers
             })
             .ToList();
 
-            // Calculate time segments
+            // 計算時間區間
             List<TimeSegment> timeSegments = CalculateTimeSegments(startDate, endDate, dateRange);
 
             // Prepare the final result
@@ -89,14 +89,15 @@ namespace Personal_project.Controllers
             foreach (var timeSegment in timeSegments)
             {
 
-                // 計算每個區間的total
+                // 計算每個區間的總金額
                 int totalAmountInSegment = (int)filtered
                     .Where(t => t.Day >= timeSegment.StartDate && t.Day <= timeSegment.EndDate)
                     .Sum(t => t.Amount);
 
                 var segmentData = new
                 {
-                    TimeGroup = $"{timeSegment.StartDate.ToString("MM/dd/yyyy")} - {timeSegment.EndDate.ToString("MM/dd/yyyy")}",
+                    // 分析每個類別的金額與百分比
+                    TimeGroup = GetFormattedTimeGroup(timeSegment.StartDate, timeSegment.EndDate, dateRange),
                     Categories = filtered
                         .Where(t => t.Day >= timeSegment.StartDate && t.Day <= timeSegment.EndDate)
                         .GroupBy(t => t.CategoryName)
@@ -120,6 +121,7 @@ namespace Personal_project.Controllers
         {
             List<TimeSegment> timeSegments = new List<TimeSegment>();
 
+            // 計算時間區間，並添加到 timeSegments 列表中
             for (int i = 0; i < 5; i++)
             {
                 timeSegments.Add(new TimeSegment
@@ -128,7 +130,7 @@ namespace Personal_project.Controllers
                     EndDate = endDate
                 });
 
-                // Move to the previous time period
+                // 回朔先前的時間段
                 switch (dateRange)
                 {
                     case "day":
@@ -155,6 +157,33 @@ namespace Personal_project.Controllers
             }
             return timeSegments;
         }
+
+
+        // 設定每個時間端的呈現方式
+        private string GetFormattedTimeGroup(DateTime startDate, DateTime endDate, string dateRange)
+        {
+            string timeGroupFormat = "";
+            CultureInfo englishCulture = new CultureInfo("en-US"); // 使用英文的 Culture
+
+            switch (dateRange)
+            {
+                case "year":
+                    timeGroupFormat = "yyyy"; // 只顯示年份
+                    return startDate.ToString(timeGroupFormat, englishCulture);
+                case "month":
+                    timeGroupFormat = "MMM"; // 只顯示月份的縮寫，例如 "JUL", "AUG"
+                    return startDate.ToString(timeGroupFormat, englishCulture);
+                case "week":
+                    timeGroupFormat = "MM/dd/yyyy"; // 顯示當週的第一天，例如 "08/01/2023"
+                    return startDate.ToString(timeGroupFormat, englishCulture);
+                case "day":
+                    timeGroupFormat = "dd ddd"; // 顯示日期以及星期的縮寫，例如 "25 Fri"
+                    return startDate.ToString(timeGroupFormat, englishCulture);
+                default:
+                    return $"{startDate} - {endDate}";
+            }
+        }
+
 
 
         // 定義 TimeSegment 類型

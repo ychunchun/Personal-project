@@ -5,15 +5,15 @@
     <!-- <link rel="stylesheet" href="/styles/home.css" /> -->
     <title>Accountbook</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="../Adminlte/plugins/fontawesome-free/css/all.min.css">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="../Adminlte/dist/css/adminlte.min.css">
-  <!-- overlayScrollbars -->
-  <link rel="stylesheet" href="../Adminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
-</head>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../Adminlte/plugins/fontawesome-free/css/all.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../Adminlte/dist/css/adminlte.min.css">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="../Adminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
     <div class="wapper">
@@ -45,7 +45,7 @@
           <div class="card-header">
             <h3 class="card-title">
               <i class="fas fa-edit"></i>
-              <h2>Select AccountBook <select id="accountName" name="account_book_name"></select></h2>
+              <h2>選擇擁有的帳本 </h2><select id="accountName" name="account_book_name"></select></h2>
             </h3>
           </div>
           <div class="card-body">
@@ -53,26 +53,71 @@
             <center><div class="container">             
               <div class="category-btns">
                 <button class="btn btn-info" id="expense-btn" data-category="expense">
-                  Expense
+                  支出
                 </button>
                 <button class="btn btn-info" id="income-btn" data-category="income">
-                  Income
+                  收入
                 </button>
               </div>
               <br>
             <div class="date-btns">
-              <button class="btn btn-outline-info" id="day-btn" data-date-range="day">Day</button>
+              <button class="btn btn-outline-info" id="day-btn" data-date-range="day">每天</button>
               <button class="btn btn-outline-info" id="week-btn" data-date-range="week">
-                Week
+                每週
               </button>
               <button class="btn btn-outline-info" id="month-btn" data-date-range="month">
-                Month
+                每月
               </button>
               <button class="btn btn-outline-info" id="year-btn" data-date-range="year">
-                Year
+                每年
               </button>
               <br>
               <br>
+
+              <canvas id="doughnutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 347px;" width="694" height="500" class="chartjs-render-monitor"></canvas>
+
+              <script>
+                var ctx = document.getElementById("doughnutChart").getContext("2d");
+              
+                fetch("/api/Chart/GetChartData?categoryType=income&dateRange=month&accountBookName=我家人")
+                  .then((response) => response.json())
+                  .then((data) => {
+                    if (data && data.length > 0) {
+                      var latestData = data[0];
+                      var categories = latestData.categories;
+              
+                      var doughnutChart = new Chart(ctx, {
+                        type: "doughnut",
+                        data: {
+                          labels: categories.map((category) => category.categoryName), // Use category names as labels
+                          datasets: [
+                            {
+                              data: categories.map((category) => category.totalAmount),
+                              backgroundColor: categories.map((category) => getBackgroundColor(category.categoryName)),
+                            },
+                          ],
+                        },
+                        options: {
+                          plugins: {
+                            legend: {
+                              display: true,
+                            },
+                          },
+                        },
+                      });
+                    }
+                  });
+              
+                function getBackgroundColor(categoryName) {
+                  var hash = 5381;
+                  for (var i = 0; i < categoryName.length; i++) {
+                    hash = (hash * 33) ^ categoryName.charCodeAt(i);
+                  }
+                  var color = "#" + (hash >>> 0).toString(16).slice(0, 6);
+                  return color;
+                }
+              </script>
+              
               <div class="container">
                 <h3><p id="date-range-text"></p></h3>
               </div>
@@ -145,7 +190,7 @@
                 </ul>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="/admin/account_book.html" class="nav-link">
                   <i class="nav-icon fas fa-th"></i>
                   <p>
                     Account
@@ -153,7 +198,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="/admin/chart.html" class="nav-link">
                   <i class="nav-icon fas fa-chart-pie"></i>
                   <p>
                     Charts
@@ -170,7 +215,7 @@
                   </p>
                 </a>                
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="/admin/history.html" class="nav-link">
                   <i class="nav-icon far fa-calendar-alt"></i>
                   <p>
                     History
@@ -178,7 +223,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="/admin/member.html" class="nav-link">
                   <i class="nav-icon far fa-image"></i>
                   <p>
                     Members
@@ -199,7 +244,7 @@
           <!-- /.sidebar-menu -->
         </div>
         <!-- /.sidebar -->
-      </aside>
+      
 
       </div>
       <!-- jQuery -->
@@ -218,5 +263,6 @@
       <script src="../Adminlte/dist/js/adminlte.js"></script>
       <script src="/script/home.js"></script>
     </div>
+  </aside>
   </body>
 </html>

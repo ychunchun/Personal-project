@@ -34,7 +34,6 @@ document.addEventListener("DOMContentLoaded", function () {
       headers["Authorization"] = "Bearer " + accessToken;
       console.log("accessToken", accessToken);
     }
-    console.log("accessToken not found");
 
     try {
       const response = await fetch("/api/User/login", {

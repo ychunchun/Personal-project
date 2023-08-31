@@ -35,6 +35,7 @@ function renderAccountBooks(accountBooks) {
           <button class="btn btn-info btn-block delete-button mt-3" id="inviteButton">Invite other ones</button>
         <div style="display: none;" id="accountBookId">${accountBook.accountBookId}</div>
         <div id="accessTokenLink" style="display: none;"></div>
+
         `
               : ""
           }
@@ -155,12 +156,32 @@ function renderAccountBooks(accountBooks) {
             const data = await response.json();
             const accessToken = data.accountBookToken;
             console.log("accessToken", accessToken);
-            const completeLink = `http://localhost:5158/admin/login.html?token=${accessToken}`;
-            // accessTokenLink.innerHTML = `<a href="${completeLink}" target="_blank">Access Token Link</a>`;
-            // accessTokenLink.style.display = "block";
-            const linkText = `Access Token Link: ${completeLink}`;
+            const completeLink = `http://localhost:5158/admin/register.html?token=${accessToken}`;
+
+            //嘗試寫一個read only 的textbox讓user直接點擊按鈕複製link
+            // const accessTokenInput = document.createElement("input");
+            // accessTokenInput.type = "text";
+            // accessTokenInput.value = completeLink;
+            // document.body.appendChild(accessTokenInput);
+
+            // const copyButton = document.createElement("button");
+            // copyButton.textContent = "Copy Link";
+            // document.body.appendChild(copyButton);
+
+            // copyButton.addEventListener("click", async () => {
+            //   try {
+            //     await navigator.clipboard.writeText(accessTokenInput.value);
+            //     console.log("Text copied to clipboard");
+            //   } catch (error) {
+            //     console.error("Failed to copy text: ", error);
+            //   }
+            // });
+            const linkText = `Shared Link: ${completeLink}`;
             accessTokenLink.textContent = linkText;
             accessTokenLink.style.display = "block";
+            // const accessTokenLink = document.getElementById("accessTokenLink");
+            // accessTokenLink.innerHTML = `<a href="${completeLink}" target="_blank">Access Token Link</a>`;
+            // accessTokenLink.style.display = "block";
           } else {
             console.error("Failed to generate access token");
           }

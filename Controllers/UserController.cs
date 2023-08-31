@@ -96,11 +96,14 @@ namespace YourProject.Controllers
 
                 //根據accountbookId在DB找相關的user
                 var identity = HttpContext.User.Identity as ClaimsIdentity; 
-                var accountbookIdClaim=identity.FindFirst("accountBookId");
-                Console.WriteLine("New Member Created:", accountbookIdClaim);
+                var accountbookIdClaim=identity?.FindFirst("accountBookId"); //如果沒有token要怎麼辦，是空的！
+                //Console.WriteLine("New Member Created:", accountbookIdClaim);
+                //string accountbookId = accountbookIdClaim.Value; // 獲取 accountbookId 的值 
 
+                // user_id是否在Members當中
+                //var exsitingMembers = _dbcontext.Members.SingleOrDefault(m => m.user_id == user.user_id && m.account_book_id == int.Parse(accountbookId));
                 //如果有接收到關於accountbook的Id，就給user相對的共享帳本
-                if(accountbookIdClaim!=null){
+                if(accountbookIdClaim!=null ){ //&& exsitingMembers==null
                     string accountbookId = accountbookIdClaim.Value; // 獲取 accountbookId 的值
                     Console.WriteLine("New Member Created:", accountbookId);
 
@@ -124,17 +127,18 @@ namespace YourProject.Controllers
                         user_id=user.user_id,
                         account_book_name="Main",
                         account_book_type="main",
+                        account_book_status="live",
                         initial_balance=0,
                     };
                     _dbcontext.AccountBooks.Add(newAccountBook);
                     _dbcontext.SaveChanges();
 
-
                     //Use the newly generated id for Members record
                     var newMember=new Members{
                         account_book_id=newAccountBook.account_book_id,
                         user_id=user.user_id,
-                        role="admin"
+                        role="admin",
+                        member_status="live"
                     };
                     _dbcontext.Members.Add(newMember);
                     _dbcontext.SaveChanges();

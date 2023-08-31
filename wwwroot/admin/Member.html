@@ -2,7 +2,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Account Book Managemaent</title>
+    <title>Members Managemaent</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.7/dist/sweetalert2.min.css"
@@ -46,6 +46,9 @@
       <div class="content-wrapper">
         <section class="content">
           <div class="container">
+            <div class="card-header">
+              <h3><b>成員管理頁</b></h3>
+          </div>
               <div class="card-body box-profile">             
                   <ul class="list-group list-group-unbordered mb-3">
                       <div id="accountBookContainer-${accountBook.accountBookId}">
@@ -76,7 +79,7 @@
             <img src="../Adminlte/dist/img/user6-128x128.jpg" class="img-circle elevation-2" alt="User Image">
           </div>
           <div class="info">
-            <a href="#" class="d-block">Mr.Banana</a>
+            <a href="#" class="d-block">michelin</a>
           </div>
         </div>
 
@@ -109,7 +112,7 @@
               </ul>
             </li>
             <li class="nav-item">
-              <a href="../Adminlte/pages/widgets.html" class="nav-link">
+              <a href="/admin/account_book.html" class="nav-link">
                 <i class="nav-icon fas fa-th"></i>
                 <p>
                   Account
@@ -117,31 +120,23 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a href="/admin/chart.html" class="nav-link">
                 <i class="nav-icon fas fa-chart-pie"></i>
                 <p>
                   Charts
                 </p>
               </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="../Adminlte/pages/charts/chartjs.html" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>ChartJS</p>
-                  </a>
-                </li>
-              </ul>
             </li>
           </li>
             <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a href="/admin/category.html" class="nav-link">
                 <i class="nav-icon fas fa-table"></i>
                 <p>
                   Categories
                 </p>
               </a>                
             <li class="nav-item">
-              <a href="../Adminlte/pages/calendar.html" class="nav-link">
+              <a href="/admin/history.html" class="nav-link">
                 <i class="nav-icon far fa-calendar-alt"></i>
                 <p>
                   History
@@ -149,7 +144,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="../Adminlte/pages/gallery.html" class="nav-link">
+              <a href="#" class="nav-link">
                 <i class="nav-icon far fa-image"></i>
                 <p>
                   Members

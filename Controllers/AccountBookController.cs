@@ -52,6 +52,7 @@ namespace Personal_project.Controllers
                         AccountBookType = accountBook.account_book_type,
                         InitialBalance = accountBook.initial_balance,
                         AccountBookStatus = accountBook.account_book_status,
+                        AdminUser=accountBook.user_id
                     })
                 .Where(a => a.AccountBookStatus == "live")
                 .ToListAsync(); 
@@ -127,12 +128,13 @@ namespace Personal_project.Controllers
                     AccountBookName = accountBook.AccountBookName,
                     AccountBookType = accountBook.AccountBookType,
                     InitialBalance = accountBook.InitialBalance,
+                    AdminUser=accountBook.AdminUser,
                     Profit = profit,
                     Members = memberRolesAndUserNames
                 });
             }
 
-            return Ok(new { AccountBooks = accountbooksWithProfit, TotalProfit = totalProfit });
+            return Ok(new { AccountBooks = accountbooksWithProfit, TotalProfit = totalProfit, CurrentUserId = user.user_id  });
         }      
 
 

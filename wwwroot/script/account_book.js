@@ -15,6 +15,7 @@ async function fetchAndDisplayAccountBooks() {
     const data = await response.json();
     const accountBooks = data.accountBooks;
     const totalProfit = data.totalProfit;
+    const currentUserId = data.currentUserId;
 
     const container = document.getElementById("AccountBookContainer");
     const totalProfitSpan = document.getElementById("totalProfit");
@@ -50,7 +51,10 @@ async function fetchAndDisplayAccountBooks() {
       listItem.appendChild(profit);
 
       //判斷如果不是Main帳本
-      if (accountBook.accountBookType !== "main") {
+      if (
+        accountBook.accountBookType !== "main" &&
+        accountBook.adminUser === currentUserId
+      ) {
         const deleteIcon = document.createElement("i");
         deleteIcon.className = "fa fa-trash";
 
@@ -75,57 +79,109 @@ async function fetchAndDisplayAccountBooks() {
         listItem.appendChild(modifyIcon);
 
         container.appendChild(listItem);
+
+        deleteIcon.addEventListener("click", async (event) => {
+          if (accountBook.accountBookType === "main") {
+            // Do not perform any action for main account books
+            return;
+          }
+          const accountBookIdString =
+            event.currentTarget.querySelector("i > div").textContent;
+          const accountBookId = parseInt(accountBookIdString, 10);
+
+          const result = await Swal.fire({
+            title: "Confirm Deletion",
+            text: "Do you want to delete this account book?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+          });
+
+          if (result.isConfirmed) {
+            // Send POST request to AccountBookStatus API
+            try {
+              const response = await fetch(
+                "/api/AccountBook/AccountBookStatus",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization:
+                      "Bearer " + localStorage.getItem("access_token"),
+                  },
+                  body: JSON.stringify({ AccountBookId: accountBookId }),
+                }
+              );
+
+              if (response.ok) {
+                location.reload();
+              } else if (response.status === 403) {
+                // 如果收到 403 Forbidden
+                Swal.fire({
+                  icon: "error",
+                  title: "Access Denied",
+                  text: "You do not have permission to perform this action.",
+                });
+              } else {
+                console.error("Failed to delete account book");
+              }
+            } catch (error) {
+              console.error("An error occurred:", error);
+            }
+          }
+        });
       }
 
       container.appendChild(listItem);
 
-      listItem.addEventListener("click", async (event) => {
-        if (accountBook.accountBookType === "main") {
-          // Do not perform any action for main account books
-          return;
-        }
-        const accountBookIdString =
-          event.currentTarget.querySelector("i > div").textContent;
-        const accountBookId = parseInt(accountBookIdString, 10);
+      // listItem.addEventListener("click", async (event) => {
+      //   if (accountBook.accountBookType === "main") {
+      //     // Do not perform any action for main account books
+      //     return;
+      //   }
+      //   const accountBookIdString =
+      //     event.currentTarget.querySelector("i > div").textContent;
+      //   const accountBookId = parseInt(accountBookIdString, 10);
 
-        const result = await Swal.fire({
-          title: "Confirm Deletion",
-          text: "Do you want to delete this account book?",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonText: "Yes",
-          cancelButtonText: "No",
-        });
+      //   const result = await Swal.fire({
+      //     title: "Confirm Deletion",
+      //     text: "Do you want to delete this account book?",
+      //     icon: "warning",
+      //     showCancelButton: true,
+      //     confirmButtonText: "Yes",
+      //     cancelButtonText: "No",
+      //   });
 
-        if (result.isConfirmed) {
-          // Send POST request to AccountBookStatus API
-          try {
-            const response = await fetch("/api/AccountBook/AccountBookStatus", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + localStorage.getItem("access_token"),
-              },
-              body: JSON.stringify({ AccountBookId: accountBookId }),
-            });
+      //   if (result.isConfirmed) {
+      //     // Send POST request to AccountBookStatus API
+      //     try {
+      //       const response = await fetch("/api/AccountBook/AccountBookStatus", {
+      //         method: "POST",
+      //         headers: {
+      //           "Content-Type": "application/json",
+      //           Authorization: "Bearer " + localStorage.getItem("access_token"),
+      //         },
+      //         body: JSON.stringify({ AccountBookId: accountBookId }),
+      //       });
 
-            if (response.ok) {
-              location.reload();
-            } else if (response.status === 403) {
-              // 如果收到 403 Forbidden
-              Swal.fire({
-                icon: "error",
-                title: "Access Denied",
-                text: "You do not have permission to perform this action.",
-              });
-            } else {
-              console.error("Failed to delete account book");
-            }
-          } catch (error) {
-            console.error("An error occurred:", error);
-          }
-        }
-      });
+      //       if (response.ok) {
+      //         location.reload();
+      //       } else if (response.status === 403) {
+      //         // 如果收到 403 Forbidden
+      //         Swal.fire({
+      //           icon: "error",
+      //           title: "Access Denied",
+      //           text: "You do not have permission to perform this action.",
+      //         });
+      //       } else {
+      //         console.error("Failed to delete account book");
+      //       }
+      //     } catch (error) {
+      //       console.error("An error occurred:", error);
+      //     }
+      //   }
+      // });
     });
   } catch (error) {
     console.error("Error fetching data", error);

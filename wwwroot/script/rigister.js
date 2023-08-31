@@ -1,4 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // Get the token from the URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get("token");
+  console.log(token);
+  // Store the token in localStorage
+  if (token) {
+    localStorage.setItem("accessToken", token);
+  }
+
   const registerButton = document.querySelector(".btn-info"); // 選擇註冊按鈕
   registerButton.addEventListener("click", async function (event) {
     event.preventDefault(); // 阻止表單的預設提交行為
