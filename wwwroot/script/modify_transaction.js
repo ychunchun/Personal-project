@@ -1,33 +1,15 @@
+// 在 DOMContentLoaded 事件中執行以下程式碼
 document.addEventListener("DOMContentLoaded", async function () {
-  /////////////////監聽/////////////////
+  // 解析 URL 中的 transactionId 參數
+  const urlParams = new URLSearchParams(window.location.search);
+  const transactionId = urlParams.get("transactionId");
+
+  // 確認是否成功取得 transactionId
+  console.log("Transaction ID:", transactionId);
   const categoryTypeSelect = document.getElementById("categoryType");
   const categoryNameSelect = document.getElementById("categoryName");
   const form = document.getElementById("transaction-form");
   const accountNameSelect = document.getElementById("accountName");
-
-  //////////////////////////以下為預設值設定（但目前還沒有成功）//////////////////////
-  // 預設值
-  const defaultCategoryType = "支出";
-
-  // 是設值觸發事件
-  categoryTypeSelect.value = defaultCategoryType;
-  categoryTypeSelect.dispatchEvent(new Event("change"));
-
-  // 設置帳本名稱為預設值
-  if (accountNameSelect.options.length > 0) {
-    accountNameSelect.value = accountNameSelect.options[0].value;
-  }
-
-  // 獲取第一個類別名稱為預設
-  const firstCategoryOption = categoryNameSelect.options[0];
-  if (firstCategoryOption) {
-    const defaultCategoryName = firstCategoryOption.value;
-    categoryNameSelect.value = defaultCategoryName;
-  }
-
-  // 訂定日期的預設值
-  form.transaction_date.value = new Date().toISOString().slice(0, 10);
-  ///////////////下拉選單給user選accountbook///////////////////////
 
   // 發送 API 請求以獲取帳簿數據
   async function fetchAccountBooks() {
@@ -69,6 +51,9 @@ document.addEventListener("DOMContentLoaded", async function () {
   categoryTypeSelect.addEventListener("change", async function () {
     const selectedCategoryType = categoryTypeSelect.value;
     const selectedAccountBookId = accountNameSelect.value;
+    const selectedAccountBookOption = accountNameSelect.querySelector(
+      `[value="${selectedAccountBookId}"]`
+    );
 
     try {
       const response = await fetch(
@@ -78,9 +63,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       // Clear previous options
       categoryNameSelect.innerHTML = "";
-
+      const categoriesArray = Object.values(categories);
       // Populate the categoryNameSelect with fetched categories
-      categories.forEach((category) => {
+      categoriesArray.forEach((category) => {
         const option = document.createElement("option");
         option.value = category.category_name;
         option.textContent = category.category_name;
@@ -97,22 +82,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   });
 
-  /////////////////針對所有要新增的transaction欄位做處理，打addtransaction api/////////////
-  //連線到AddTransaction Hub
-  const connection = new signalR.HubConnectionBuilder()
-    .withUrl("/AddTransactionHub")
-    .build();
-
-  connection
-    .start()
-    .then(() => {
-      console.log("Connected to SignalR Hub.");
-    })
-    .catch((error) => {
-      console.error("Error connecting to SignalR Hub:", error);
-    });
-
-  //////////////從profile api取得user_id，並儲存在底下的post api////////////
   let user_id; // 宣告成全域變數，讓後面的寫入也可以使用
   try {
     const response = await fetch("/api/User/userprofile", {
@@ -133,82 +102,85 @@ document.addEventListener("DOMContentLoaded", async function () {
     console.error("Error:", error);
   }
 
-  //////////////將add transaction資料送出//////////////
+  // 發送 API 請求以獲取交易詳細資訊
+  async function fetchTransactionDetails() {
+    try {
+      const response = await fetch(
+        `/api/Transactions/TransactionDetails?transactionId=${transactionId}`
+      );
+      if (!response.ok) {
+        throw new Error("API request failed");
+      }
+
+      const transactionDetails = await response.json();
+      // 將獲取的交易詳細資訊填充到表單元素中
+      fillFormWithTransactionDetails(transactionDetails);
+    } catch (error) {
+      console.error("Error fetching transaction details:", error);
+    }
+  }
+
+  const amountInput = document.getElementById("amount");
+  const transactionDateInput = document.getElementById("transaction-date");
+  const detailsInput = document.getElementById("details");
+  // 將交易詳細資訊填充到表單元素中
+  function fillFormWithTransactionDetails(details) {
+    const accountNameSelect = document.getElementById("accountName");
+    const categoryTypeSelect = document.getElementById("categoryType");
+    const categoryNameSelect = document.getElementById("categoryName");
+
+    accountNameSelect.value = details.accountBookName;
+    categoryTypeSelect.value = details.categoryType;
+    // 觸發類別類型選擇事件，以填充對應的類別名稱選項
+    categoryTypeSelect.dispatchEvent(new Event("change"));
+    categoryNameSelect.value = details.categoryName;
+    amountInput.value = details.amount;
+    transactionDateInput.value = details.day.slice(0, 10); // 格式化日期
+    detailsInput.value = details.details;
+  }
+
   form.addEventListener("submit", async function (event) {
     event.preventDefault();
 
-    //使用選取的帳本 ID 從選項元素中獲取帳本名稱
+    //這一段會引起回傳值變500
     const selectedAccountBookId = accountNameSelect.value;
     const selectedAccountBookOption = accountNameSelect.querySelector(
       `[value="${selectedAccountBookId}"]`
     );
 
-    // 獲取選取的帳本名稱
-    const accountName = selectedAccountBookOption.textContent;
-    const categoryType = categoryTypeSelect.value;
-    const categoryName = categoryNameSelect.value;
-    const amount = parseFloat(form.amount.value);
-    const transactionDate = new Date(form.transaction_date.value);
-    const formattedTransactionDate = `${transactionDate.getFullYear()}-${(
-      transactionDate.getMonth() + 1
-    )
-      .toString()
-      .padStart(2, "0")}-${transactionDate
-      .getDate()
-      .toString()
-      .padStart(2, "0")}`;
-    const details = form.details.value;
-
-    const data = {
-      user_id: user_id, // 使用外部宣告的 user_id
-      account_book_name: accountName,
-      category_type: categoryType,
-      category_name: categoryName,
-      amount: amount,
-      transaction_date: formattedTransactionDate,
-      details: details,
+    const updatedTransactionData = {
+      // 從表單中獲取所需的修改後的交易詳細資訊
+      user_id: user_id,
+      transactionId: transactionId,
+      account_book_name: selectedAccountBookOption.textContent, // 使用帳本名稱
+      category_type: categoryTypeSelect.value,
+      category_name: categoryNameSelect.value,
+      amount: parseFloat(amountInput.value),
+      transaction_date: transactionDateInput.value,
+      details: detailsInput.value,
     };
 
     try {
-      const response = await fetch("/api/Transactions/AddTransaction", {
+      const response = await fetch(`/api/Transactions/UpdateTransaction`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(updatedTransactionData),
       });
 
-      //給user成功或錯誤的判斷
       if (response.ok) {
-        //是傳api result到hub，不是前端的data
-        const result = await response.json();
-        console.log("Received result from API:", result);
-        Swal.fire({
-          icon: "success",
-          title: "Success!",
-          text: "Transaction has been added successfully.",
-          confirmButtonText: "OK",
-        }).then(() => {
-          // 跳轉到顯示類別畫面
-          //window.location.href = "/admin/show_category.html";
-          //如果按鈕被點擊，則傳遞訊息到AddTransaction Hub
-          console.log("okkkk");
-          connection.invoke("SendAddTransaction", JSON.stringify(result));
-        });
-        // 清空輸入字段
-        form.amount.value = "";
-        form.transaction_date.value = "";
-        form.details.value = "";
+        // 更新成功，執行相應的處理
+        console.log("Transaction updated successfully.");
       } else {
-        Swal.fire({
-          icon: "error",
-          title: "Error!",
-          text: "Failed to add transaction.",
-          confirmButtonText: "OK",
-        });
+        // 更新失敗，執行相應的處理
+        console.error("Failed to update transaction.");
       }
     } catch (error) {
       console.error("Error sending request:", error);
     }
   });
+
+  // 執行取得交易詳細資訊的 API 請求
+  fetchTransactionDetails();
 });

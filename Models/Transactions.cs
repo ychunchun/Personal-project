@@ -21,6 +21,8 @@ public partial class Transactions
 
     public string? transaction_status { get; set; }
 
+    public int? category_and_account_id { get; set; }
+
     public virtual ICollection<History> History { get; set; } = new List<History>();
 
     public virtual ICollection<Notifications> Notifications { get; set; } = new List<Notifications>();
@@ -28,6 +30,8 @@ public partial class Transactions
     public virtual AccountBooks? account_book { get; set; }
 
     public virtual Categories? category { get; set; }
+
+    public virtual CategoryAndAccount? category_and_account { get; set; }
 
     public virtual Users? user { get; set; }
 }

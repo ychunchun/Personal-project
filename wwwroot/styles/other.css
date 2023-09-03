@@ -1,0 +1,147 @@
+.button22 {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  background: #e6e1c5;
+  text-transform: uppercase;
+  color: #666458;
+  transition: all 1000ms;
+  font-size: 18px;
+  position: relative;
+  overflow: hidden;
+  outline: 2px solid #666458;
+  margin-right: 10px; /* 按鈕之間的右側間距 */
+}
+
+/* 最後一個按鈕不需要右側間距 */
+.button22:last-child {
+  margin-right: 18px;
+}
+
+.button22:hover {
+  color: #dcfffc;
+  transform: scale(1);
+  outline: 2px solid #666458;
+  box-shadow: 4px 5px 17px -4px #666458;
+}
+
+.button22::before {
+  content: "";
+  position: absolute;
+  left: -50px;
+  top: 0;
+  width: 0;
+  height: 100%;
+  background-color: #665f39;
+  transform: skewX(30deg);
+  z-index: -1;
+  transition: width 1000ms;
+}
+
+.button22:hover::before {
+  width: 250%;
+}
+
+.button22:active {
+  background: #665f39;
+}
+
+.selected {
+  background-color: #333; /* 深色背景 */
+  color: #dcfffc; /* 白色文本 */
+}
+
+hr.custom-hr {
+  border: none;
+  height: 2px;
+  background-color: #505962;
+  margin: 20px 10px;
+}
+
+.custom-image {
+  width: 190px;
+  height: 35px;
+  padding-right: 20px;
+}
+
+.custom-paragraph {
+  color: #c2c7d0;
+}
+
+.button22-container {
+  display: flex; /* 將兩個按鈕的 div 水平排列 */
+  justify-content: center; /* 水平居中 */
+}
+
+/* 定義自訂的下拉選單樣式 */
+.custom-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: url("down-arrow.png") no-repeat right center;
+  background-size: 20px 20px;
+  padding: 4px;
+  font-size: 18px;
+  border: 2px solid #ccc;
+  background-color: #e6e1c5;
+  border-radius: 5px;
+  color: #666458;
+  width: auto; /* 調整下拉選單的寬度 */
+  height: 42px; /* 調整下拉選單的高度 */
+}
+
+/* 設定選中的下拉選單樣式 */
+.custom-select:focus {
+  outline: none;
+  border-color: #e6e1c5;
+  box-shadow: 0 0 5px #505962;
+}
+
+/* 將 <div> 元素水平居中 */
+.centered-div {
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+#app {
+  text-align: center;
+  margin: 5px auto;
+  width: 300px;
+}
+
+#date-range {
+  margin-left: 26px;
+  width: 176px;
+  margin-top: 15px;
+  padding: 8px;
+  border: 1px solid #e6e1c5;
+  background-color: #e6e1c5;
+  border-radius: 5px;
+  font-size: 14px;
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+  margin-bottom: 15px;
+}
+
+.daterangepicker {
+  z-index: 10000;
+}
+
+.button-container22 {
+  display: flex;
+  gap: 10px; /* 間隔 */
+}
+
+.delete-button {
+  flex: 1; /* 均分水平 */
+}

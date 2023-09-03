@@ -13,6 +13,14 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
     );
 
+    // 找到 "修改" 按鈕元素，直接傳送包含transactionId的網址給button
+    const modifyButton = document.querySelector(".modify-button");
+
+    // 動態生成修改連結並設置 href 屬性
+    if (modifyButton) {
+      modifyButton.href = `/admin/modify_transaction.html?transactionId=${transactionId}`;
+    }
+
     ////////////////////delete api//////////////////
     const deleteButton = document.querySelector(".delete-button");
     deleteButton.addEventListener("click", async (event) => {
@@ -64,13 +72,21 @@ document.addEventListener("DOMContentLoaded", async function () {
       const amountElement = document.getElementById("amount");
       const dayElement = document.getElementById("day");
       const detailsElement = document.getElementById("details");
+      const recordedByElement = document.getElementById("recordedBy");
 
-      if (accountElement && categoryElement && amountElement && dayElement) {
+      if (
+        accountElement &&
+        categoryElement &&
+        amountElement &&
+        dayElement &&
+        recordedByElement
+      ) {
         accountElement.textContent = trasactionDetails.accountBookName;
         categoryElement.textContent = trasactionDetails.categoryName;
         amountElement.textContent = trasactionDetails.amount;
         dayElement.textContent = dateOnlyString;
         detailsElement.textContent = trasactionDetails.details;
+        recordedByElement.textContent = trasactionDetails.userName;
       }
     } else {
       console.error("Failed to fetch transaction details.");

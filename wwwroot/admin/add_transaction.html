@@ -1,9 +1,8 @@
 <!DOCTYPE html>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
     <title>Add Transaction</title>
-    <link rel="stylesheet" href="/styles/add_transaction.css" />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.7/dist/sweetalert2.min.css"
@@ -19,6 +18,7 @@
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="../Adminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
     <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/styles/other.css">
   </head>
   <body>
     <div class="wapper">
@@ -57,52 +57,80 @@
 
       <!-- maincontent -->
       <div class="content-wrapper">
-      <section class="content">
+        <section class="content">
         <div class="container">
-          <h1>Add Transaction</h1>
-          <form id="transaction-form">
-            <label for="category">Account Book:</label>
-            <select id="accountName" name="account_book_name"></select>
-            <br />
+          <div class="card card-primary card-outline card-info">
+            <div class="card-header">
+                <h3><b>新增帳目</b></h3>
+            </div>
+            <div class="card-body box-profile">             
+                <ul class="list-group list-group-unbordered mb-3">
+                    <li class="list-group-item">
+                        <div id="AccountBookContainer">
+                          <form id="transaction-form">
+                          <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">選擇帳本</label>
+                              <div class="col-sm-10">
+                                <select class="form-control" id="accountName" name="account_book_name"></select>
+                              </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">類型</label>
+                              <div class="col-sm-10">
+                                <select class="form-control" id="categoryType" name="category_type">
+                                  <option value="支出">支出</option>
+                                  <option value="收入">收入</option>
+                                </select>
+                              </div>
+                          </div>   
+                          <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">金額</label>
+                              <div class="col-sm-10">
+                                <input type="number" class="form-control" id="amount" name="amount" step="0.01" required placeholder="TWD">
+                              </div>
+                          </div> 
+                          <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">種類</label>
+                              <div class="col-sm-10">
+                                <select class="form-control" id="categoryName" name="category_name"></select>
+                              </div>
+                          </div>  
+                          <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">日期</label>
+                              <div class="col-sm-10">
+                                <input
+                                  class="form-control"
+                                  type="date"
+                                  id="transaction-date"
+                                  name="transaction_date"
+                                  required
+                                />
+                              </div>
+                          </div> 
+                          <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">詳細記錄</label>
+                              <div class="col-sm-10">
+                                <input type="initialbalance" class="form-control" id="details" placeholder="填入更詳細的金額說明">
+                              </div>
+                          </div>                            
+                        </div>
+                    </li>
+                </ul>
+                  <a href="/admin/home.html" class="btn btn-info btn-block delete-button" style="background-color:#e6e1c5; color:#505962; border-color: #505962 !important;"><b>新增</b></a>
+              </form>
+            </div>
+        </div>
 
-            <label for="categoryType">Transaction Type:</label>
-            <select id="categoryType" name="category_type">
-              <option value="expense">Expense</option>
-              <option value="income">Income</option>
-            </select>
-            <br />
-
-            <label for="amount">Amount:</label>
-            <input type="number" id="amount" name="amount" step="0.01" required />
-            <label for="currency">TWD</label>
-            <br />
-
-            <label for="category">Category:</label>
-            <select id="categoryName" name="category_name"></select>
-            <br />
-
-            <label for="transaction-date">Transaction Date:</label>
-            <input
-              type="date"
-              id="transaction-date"
-              name="transaction_date"
-              required
-            />
-            <br />
-            <label for="details">Details:</label>
-            <textarea id="details" name="details" rows="4"></textarea>
-            <br />
-            <button type="submit">Save</button>
-          </form>
         </div>
       </section>
     </div>
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
-      <a href="index3.html" class="brand-link bg-cyan text-sm">
+      <a href="/admin/home.html" class="brand-link bg-cyan text-sm" style="background-color:#E6E1C5!important">
         <img src="../Adminlte/dist/img/weblogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <h5><span class="brand-text font-weight-light">Show Me the Money</span></h5>
+        <!-- <h5><span class="brand-text font-weight-light">Show Me the Money</span></h5> -->
+        <img src="../Adminlte/dist/img/projectLogo.png" alt="Project Logo" class="custom-image">
       </a>
 
       <!-- Sidebar -->
@@ -118,89 +146,27 @@
         </div>
 
 
-        <!-- Sidebar Menu -->
-        <nav class="mt-2">
+         <!-- Sidebar Menu -->
+         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <!-- Add icons to the links using the .nav-icon class
                 with font-awesome or any other icon font library -->
             <li class="nav-item">
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="./index.html" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Dashboard v1</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="./index2.html" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Dashboard v2</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="./index3.html" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Dashboard v3</p>
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <li class="nav-item">
-              <a href="../Adminlte/pages/widgets.html" class="nav-link">
-                <i class="nav-icon fas fa-th"></i>
+              <a href="/admin/account_book.html" class="nav-link">
+                <i class="nav-icon fas fa-book white-icon"></i>
                 <p>
-                  Account
+                 帳本管理
                 </p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-chart-pie"></i>
+              <a href="/admin/history.html" class="nav-link">
+                <i class="nav-icon fas fa-history white-icon"></i>
                 <p>
-                  Charts
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="../Adminlte/pages/charts/chartjs.html" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>ChartJS</p>
-                  </a>
-                </li>
-              </ul>
-            </li>
-          </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-table"></i>
-                <p>
-                  Categories
-                </p>
-              </a>                
-            <li class="nav-item">
-              <a href="../Adminlte/pages/calendar.html" class="nav-link">
-                <i class="nav-icon far fa-calendar-alt"></i>
-                <p>
-                  History
+                  歷史編輯紀錄
                 </p>
               </a>
             </li>
-            <li class="nav-item">
-              <a href="../Adminlte/pages/gallery.html" class="nav-link">
-                <i class="nav-icon far fa-image"></i>
-                <p>
-                  Members
-                </p>
-              </a>
-            </li>
-            <!-- <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon far fa-envelope"></i>
-                <p>
-                  Notifications
-                </p>
-              </a>
-            </li>              -->
           </ul>
         </nav>
         <!-- /.sidebar-menu -->

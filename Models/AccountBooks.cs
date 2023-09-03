@@ -17,6 +17,8 @@ public partial class AccountBooks
 
     public int? user_id { get; set; }
 
+    public virtual ICollection<CategoryAndAccount> CategoryAndAccount { get; set; } = new List<CategoryAndAccount>();
+
     public virtual ICollection<History> History { get; set; } = new List<History>();
 
     public virtual ICollection<Members> Members { get; set; } = new List<Members>();

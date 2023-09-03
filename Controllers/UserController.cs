@@ -12,6 +12,7 @@ using Microsoft.AspNet.SignalR;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 namespace YourProject.Controllers
 {
@@ -80,7 +81,7 @@ namespace YourProject.Controllers
 
 ///////////////登入//////////////////
         [HttpPost("login")]
-        public IActionResult Login(LoginDto input)
+        public async Task<IActionResult> LoginAsync(LoginDto input)
         {   
             if (input.provider.ToLower() == "native")
             {
@@ -142,9 +143,34 @@ namespace YourProject.Controllers
                     };
                     _dbcontext.Members.Add(newMember);
                     _dbcontext.SaveChanges();
-                }
 
-                
+                    //開始給定新帳本預設類別
+                    // 預設要給的帳本類別
+                    var defaultCategoryIds = new List<int> { 1, 2, 12, 15, 31, 33 }; 
+
+                    foreach (var categoryId in defaultCategoryIds)
+                    {
+                        // 透過 category_id，在 Categories table 獲取預設類別的資訊
+                        var defaultCategory = await _dbcontext.Categories
+                            .FirstOrDefaultAsync(category => category.category_id == categoryId);
+
+                        if (defaultCategory != null)
+                        {
+                            // 新增預設的類別到 CategoryAndAccount table
+                            var newCategoryAndAccount = new CategoryAndAccount
+                            {
+                                account_id = newAccountBook.account_book_id,
+                                category_id = defaultCategory.category_id,
+                                category_status = "live"
+                            };
+
+                            _dbcontext.CategoryAndAccount.Add(newCategoryAndAccount);
+                        }
+                    }
+
+                    _dbcontext.SaveChanges();
+                }
+               
 
                 var response = new
                 {
@@ -167,90 +193,10 @@ namespace YourProject.Controllers
             }
             else if (input.provider.ToLower() == "facebook")
             {
-            }
-            return BadRequest(new { message = "Failed to retrieve Facebook user profile" });
         }
-                // var accessToken = input.access_token;
-
-                // // 發http
-                // var httpClient = new HttpClient();
-                // var response = httpClient.GetAsync($"https://graph.facebook.com/me?fields=name,email&access_token={accessToken}").Result;
-                // if (response.IsSuccessStatusCode)
-                // {
-                //     // 解析 JSON
-                //     var json = response.Content.ReadAsStringAsync().Result;
-                //     var profile = JsonConvert.DeserializeObject<FacebookUserProfile>(json);
-
-                //     if (profile != null)
-                //     {
-                //         var existingUser = _dbcontext.Users.SingleOrDefault(u => u.email == profile.email);
-                //         if (existingUser != null)
-                //         {
-                //             string existingUserAccessToken = GenerateAccessToken(existingUser.email);
-                //             var existingUserResponse = new
-                //             {
-                //                 data = new
-                //                 {
-                //                     access_token = existingUserAccessToken,
-                //                     access_expired = 3600,
-                //                     user = new
-                //                     {
-                //                         user_id = existingUser.user_id,
-                //                         provider = existingUser.provider,
-                //                         user_name = existingUser.user_name,
-                //                         email = existingUser.email,
-                //                         // picture = existingUser.picture
-                //                     }
-                //                 }
-                //             };
-
-                //             return Ok(existingUserResponse);
-                //         }
-                //         else
-                //         {
-                //             string randomPassword = GenerateRandomPassword(8);
-                //             var newUser = new Users
-                //             {
-                //                 provider = "facebook",
-                //                 user_name = profile.user_name,
-                //                 email = profile.email,
-                //                 // picture = profile.picture,
-                //                 password = HashPassword(randomPassword)
-                //             };
-
-                //            _dbcontext.Users.Add(newUser);
-                //             _dbcontext.SaveChanges();
-
-                //             string newUserAccessToken = GenerateAccessToken(newUser.email);
-                //             var newUserResponse = new
-                //             {
-                //                 data = new
-                //                 {
-                //                     access_token = newUserAccessToken,
-                //                     access_expired = 3600,
-                //                     user = new
-                //                     {
-                //                         user_id = newUser.user_id,
-                //                         provider = newUser.provider,
-                //                         user_name = newUser.user_name,
-                //                         email = newUser.email,
-                //                         // picture = newUser.picture
-                //                     }
-                //                 }
-                //             };
-
-                //             return Ok(newUserResponse);
-                //         }
-                //     }
-                //     else
-                //     {
-                //         return BadRequest(new { message = "Failed to retrieve Facebook user profile" });
-                //     }
-                // }
-                // else
-                // {
-                //     return BadRequest(new { message = "Failed to retrieve Facebook user profile" });
-                // }
+        return BadRequest(new { message = "Failed to retrieve Facebook user profile" });
+        }
+               
            
 
         [Authorize] //經過驗證的user

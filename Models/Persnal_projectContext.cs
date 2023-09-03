@@ -15,6 +15,8 @@ public partial class Persnal_projectContext : DbContext
 
     public virtual DbSet<Categories> Categories { get; set; }
 
+    public virtual DbSet<CategoryAndAccount> CategoryAndAccount { get; set; }
+
     public virtual DbSet<History> History { get; set; }
 
     public virtual DbSet<Members> Members { get; set; }
@@ -45,9 +47,22 @@ public partial class Persnal_projectContext : DbContext
             entity.HasKey(e => e.category_id).HasName("PK__Categori__D54EE9B4DEFB021C");
 
             entity.Property(e => e.category_name).HasMaxLength(255);
-            entity.Property(e => e.category_type)
-                .HasMaxLength(255)
-                .IsUnicode(false);
+            entity.Property(e => e.category_type).HasMaxLength(255);
+        });
+
+        modelBuilder.Entity<CategoryAndAccount>(entity =>
+        {
+            entity.HasKey(e => e.category_and_account_id).HasName("PK__Category__380E69AC55818E64");
+
+            entity.Property(e => e.category_status).HasMaxLength(100);
+
+            entity.HasOne(d => d.account).WithMany(p => p.CategoryAndAccount)
+                .HasForeignKey(d => d.account_id)
+                .HasConstraintName("FK__CategoryA__accou__571DF1D5");
+
+            entity.HasOne(d => d.category).WithMany(p => p.CategoryAndAccount)
+                .HasForeignKey(d => d.category_id)
+                .HasConstraintName("FK__CategoryA__categ__5629CD9C");
         });
 
         modelBuilder.Entity<History>(entity =>
@@ -128,6 +143,10 @@ public partial class Persnal_projectContext : DbContext
             entity.HasOne(d => d.account_book).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.account_book_id)
                 .HasConstraintName("FK__Transacti__accou__3D5E1FD2");
+
+            entity.HasOne(d => d.category_and_account).WithMany(p => p.Transactions)
+                .HasForeignKey(d => d.category_and_account_id)
+                .HasConstraintName("FK__Transacti__categ__59063A47");
 
             entity.HasOne(d => d.category).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.category_id)

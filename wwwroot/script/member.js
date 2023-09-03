@@ -156,7 +156,7 @@ function renderAccountBooks(accountBooks) {
             const data = await response.json();
             const accessToken = data.accountBookToken;
             console.log("accessToken", accessToken);
-            const completeLink = `http://localhost:5158/admin/register.html?token=${accessToken}`;
+            const completeLink = `http://localhost:5158/admin/login.html?token=${accessToken}`;
 
             //嘗試寫一個read only 的textbox讓user直接點擊按鈕複製link
             // const accessTokenInput = document.createElement("input");
