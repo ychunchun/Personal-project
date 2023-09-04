@@ -27,3 +27,10 @@ public class MemberRoleAndUserNameDTO
     public int MemberId { get; set; }
     public int? UserId{get;set;}
 }
+
+public class AccountBookUpdateDto
+{
+    public int? AccountBookId { get; set; }
+    public string  AccountBookName{ get; set; }
+    public int? InitialBalance { get; set; }
+}

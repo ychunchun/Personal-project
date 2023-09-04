@@ -134,54 +134,6 @@ async function fetchAndDisplayAccountBooks() {
       }
 
       container.appendChild(listItem);
-
-      // listItem.addEventListener("click", async (event) => {
-      //   if (accountBook.accountBookType === "main") {
-      //     // Do not perform any action for main account books
-      //     return;
-      //   }
-      //   const accountBookIdString =
-      //     event.currentTarget.querySelector("i > div").textContent;
-      //   const accountBookId = parseInt(accountBookIdString, 10);
-
-      //   const result = await Swal.fire({
-      //     title: "Confirm Deletion",
-      //     text: "Do you want to delete this account book?",
-      //     icon: "warning",
-      //     showCancelButton: true,
-      //     confirmButtonText: "Yes",
-      //     cancelButtonText: "No",
-      //   });
-
-      //   if (result.isConfirmed) {
-      //     // Send POST request to AccountBookStatus API
-      //     try {
-      //       const response = await fetch("/api/AccountBook/AccountBookStatus", {
-      //         method: "POST",
-      //         headers: {
-      //           "Content-Type": "application/json",
-      //           Authorization: "Bearer " + localStorage.getItem("access_token"),
-      //         },
-      //         body: JSON.stringify({ AccountBookId: accountBookId }),
-      //       });
-
-      //       if (response.ok) {
-      //         location.reload();
-      //       } else if (response.status === 403) {
-      //         // 如果收到 403 Forbidden
-      //         Swal.fire({
-      //           icon: "error",
-      //           title: "Access Denied",
-      //           text: "You do not have permission to perform this action.",
-      //         });
-      //       } else {
-      //         console.error("Failed to delete account book");
-      //       }
-      //     } catch (error) {
-      //       console.error("An error occurred:", error);
-      //     }
-      //   }
-      // });
     });
   } catch (error) {
     console.error("Error fetching data", error);

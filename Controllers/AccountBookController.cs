@@ -251,5 +251,35 @@ namespace Personal_project.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+
+        [HttpPost("UpdateAccountBook")]
+        public async Task<ActionResult> UpdateAccountBook(AccountBookUpdateDto input)
+        {
+            try
+            {
+                var existingAccountBook = await _dbcontext.AccountBooks
+                    .FirstOrDefaultAsync(a => a.account_book_id == input.AccountBookId);
+
+                if (existingAccountBook == null)
+                {
+                    return NotFound("AccountBook not found");
+                }
+
+                // 更新交易屬性值
+                existingAccountBook.account_book_name = input.AccountBookName;
+                existingAccountBook.initial_balance = input.InitialBalance;
+
+                await _dbcontext.SaveChangesAsync();
+
+                // 返回更新後的交易記錄
+                return Ok(existingAccountBook);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception: " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

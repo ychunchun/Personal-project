@@ -1,3 +1,4 @@
+//////////////////////////選日框框呈現///////////////////////////
 $(document).ready(function () {
   $("#date-range").daterangepicker({
     opens: "left",
@@ -122,6 +123,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   }
 
+  /////////////////////////Doghnut Chart///////////////////////////
   var doughnutChart; //要設為全域變數，才可以即時更新
   function generateChart(data) {
     var ctx = document.getElementById("doughnutChart").getContext("2d");
@@ -211,7 +213,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   await fetchAccountBooks();
 
-  //傳送參數到API
+  ///////////////////////////////將篩選參數傳送到API/////////////////////////
   async function fetchTransactions(
     categoryType,
     dateRange,
@@ -240,6 +242,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const tableBody = document.getElementById("transactionTableBody");
     tableBody.innerHTML = ""; // 清空表格内容
 
+    //如果查詢值為空，否則渲染表格//
     if (data.filteredWithTotal.length === 0) {
       const noDataMessage = document.createElement("tr");
       noDataMessage.innerHTML = `
@@ -264,6 +267,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     const totalAmountSpan = document.getElementById("total-amount");
 
+    //顯示總金額在chart底下
     if (totalAmountSpan) {
       const totalAmount = data.filteredWithTotal.reduce((sum, transaction) => {
         return sum + transaction.amount;

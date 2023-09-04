@@ -25,23 +25,30 @@ namespace Personal_project.Controllers
 
         
         [HttpGet("GetHistory")]
-        public async Task<IActionResult> GetHistory(int AccountBookId)
+        public async Task<IActionResult> GetHistory(int AccountBookId, string? UserName)
         {
+            var query = _dbcontext.History
+                .Where(h => h.account_book_id == AccountBookId);
 
-            var history = await _dbcontext.History
-                .Where(h => h.account_book_id ==  AccountBookId ) // Filter by target user_id
+            if (!string.IsNullOrEmpty(UserName))
+            {
+                query = query.Where(h => h.user_name == UserName);
+            }
+
+            var history = await query
                 .Select(h => new
                 {
                     TransactionId = h.transaction_id,
                     OperationType = h.operation_type,
-                    Date = h.operation_date.HasValue ? h.operation_date.Value.ToString("MM/dd") : "", // Format if not null
+                    Date = h.operation_date.HasValue ? h.operation_date.Value.ToString("MM/dd") : "",
                     UserName = h.user_name,
                     CategoryName = h.category_name,
                     CategoryType = h.category_type,
                     Amount = h.amount,
-                    AccountBookId=h.account_book_id
+                    AccountBookId = h.account_book_id
                 })
                 .ToListAsync();
+
             if (!history.Any())
             {
                 return NotFound("History not found");
@@ -49,5 +56,6 @@ namespace Personal_project.Controllers
 
             return Ok(history);
         }
+
     }
 }
