@@ -152,6 +152,9 @@ document.addEventListener("DOMContentLoaded", async function () {
           plugins: {
             legend: {
               display: true,
+              labels: {
+                fontSize: 17,
+              },
             },
           },
         },

@@ -1,35 +1,24 @@
 <!DOCTYPE html>
-<html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Add Category</title>
-    <link rel="stylesheet" href="/styles/add_category.css" />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.7/dist/sweetalert2.min.css"
     />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.7/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <!-- Google Font: Source Sans Pro -->
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"
-    />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
-    <link
-      rel="stylesheet"
-      href="../Adminlte/plugins/fontawesome-free/css/all.min.css"
-    />
+    <link rel="stylesheet" href="../Adminlte/plugins/fontawesome-free/css/all.min.css">
     <!-- Theme style -->
-    <link rel="stylesheet" href="../Adminlte/dist/css/adminlte.min.css" />
+    <link rel="stylesheet" href="../Adminlte/dist/css/adminlte.min.css">
     <!-- overlayScrollbars -->
-    <link
-      rel="stylesheet"
-      href="../Adminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css"
-    />
+    <link rel="stylesheet" href="../Adminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/styles/other.css">
   </head>
   <body>
     <div class="wapper">
@@ -56,19 +45,19 @@
       </nav>
 
       <!-- main content -->
-      <div class="content-wrapper">
+      <!-- <div class="content-wrapper">
         <section class="content">
           <div class="container">
-            <h2>Add Category</h2>
+            <h2>新增類別</h2>
             <form id="categoryForm">
-              <label for="newCategoryName">New Category Name:</label>
+              <label for="newCategoryName">類別名稱:</label>
               <input type="text" id="newCategoryName" name="category_name" />
               <br />
 
-              <label for="newCategoryType">New Category Type:</label>
+              <label for="newCategoryType">類別型態:</label>
               <select id="newCategoryType" name="category_type">
-                <option value="expense">Expense</option>
-                <option value="income">Income</option>
+                <option value="支出">支出</option>
+                <option value="收入">收入</option>
               </select>
               <br/>
 
@@ -76,16 +65,58 @@
             </form>
           </div>
         </section>
-      </div>
+      </div> -->
+
+      <!-- maincontent -->
+      <div class="content-wrapper">
+        <section class="content">
+        <div class="container">
+          <div class="card card-primary card-outline card-info">
+            <div class="card-header">
+                <h3><b>新增類別</b></h3>
+            </div>
+            <div class="card-body box-profile">             
+                <ul class="list-group list-group-unbordered mb-3">
+                    <li class="list-group-item">
+                        <div id="AccountBookContainer">
+                          <form id="categoryForm">
+                          <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">類型</label>
+                              <div class="col-sm-10">
+                                <select class="form-control" id="categoryType" name="category_type">
+                                  <option value="支出">支出</option>
+                                  <option value="收入">收入</option>
+                                </select>
+                              </div>
+                          </div>   
+                          <div class="form-group row">
+                            <label for="categoryName" class="col-sm-2 col-form-label">類別名稱</label>
+                            <div class="col-sm-10">
+                              <input type="text" class="form-control" id="categoryName" name="category_name" placeholder="填入想新增的類別名稱" required title="請填寫名稱">
+                            </div>
+                          </div>                          
+                        </div>
+                    </li>
+                </ul>
+                <button type="submit" class="btn btn-info btn-block delete-button" style="background-color:#e6e1c5; color:#505962; border-color: #505962 !important;"><b>新增</b></button>
+              </form>
+            </div>
+        </div>
+
+        </div>
+      </section>
+    </div>
 
 
 
-      <!-- Main Sidebar Container -->
-      <aside class="main-sidebar sidebar-dark-primary elevation-4">
+
+       <!-- Main Sidebar Container -->
+      <aside class="main-sidebar sidebar-dark-primary elevation-4" style="position:fixed; background-color:#242d35!important; overflow-y: clip!important">
         <!-- Brand Logo -->
-        <a href="index3.html" class="brand-link bg-cyan text-sm">
+        <a href="/admin/home.html" class="brand-link bg-cyan text-sm" style="background-color:#E6E1C5!important">
           <img src="../Adminlte/dist/img/weblogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-          <h5><span class="brand-text font-weight-light">Show Me the Money</span></h5>
+          <!-- <h5><span class="brand-text font-weight-light">Show Me the Money</span></h5> -->
+          <img src="../Adminlte/dist/img/projectLogo.png" alt="Project Logo" class="custom-image">
         </a>
 
         <!-- Sidebar -->
@@ -102,84 +133,29 @@
 
 
           <!-- Sidebar Menu -->
-          <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-              <!-- Add icons to the links using the .nav-icon class
-                  with font-awesome or any other icon font library -->
-              <li class="nav-item">
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./index.html" class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Dashboard v1</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./index2.html" class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Dashboard v2</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./index3.html" class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Dashboard v3</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="/admin/account_book.html" class="nav-link">
-                  <i class="nav-icon fas fa-th"></i>
-                  <p>
-                    Account
-                  </p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="/admin/chart.html" class="nav-link">
-                  <i class="nav-icon fas fa-chart-pie"></i>
-                  <p>
-                    Charts
-                  </p>
-                </a>
-              </li>
-            </li>            
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon fas fa-table"></i>
-                  <p>
-                    Categories
-                  </p>
-                </a>               
-              <li class="nav-item">
-                <a href="/admin/history.html" class="nav-link">
-                  <i class="nav-icon far fa-calendar-alt"></i>
-                  <p>
-                    History
-                  </p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="/admin/member.html" class="nav-link">
-                  <i class="nav-icon far fa-image"></i>
-                  <p>
-                    Members
-                  </p>
-                </a>
-              </li>
-              <!-- <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon far fa-envelope"></i>
-                  <p>
-                    Notifications
-                  </p>
-                </a>
-              </li> -->
-                
-            </ul>
-          </nav>
-          <!-- /.sidebar-menu -->
+        <nav class="mt-2">
+          <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <!-- Add icons to the links using the .nav-icon class
+                with font-awesome or any other icon font library -->
+            <li class="nav-item">
+              <a href="/admin/AccountBook Management.html" class="nav-link">
+                <i class="nav-icon fas fa-book white-icon"></i>
+                <p>
+                  帳本管理
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/admin/history.html" class="nav-link">
+                <i class="nav-icon fas fa-history white-icon"></i>
+                <p>
+                  歷史編輯紀錄
+                </p>
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
         </div>
         <!-- /.sidebar -->
       </aside>

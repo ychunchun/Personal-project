@@ -12,8 +12,8 @@ document.addEventListener("DOMContentLoaded", function () {
   loginButton.addEventListener("click", async function (event) {
     event.preventDefault(); // 阻止表單的預設提交行為
 
-    const email = document.querySelector('[placeholder="Email"]').value;
-    const password = document.querySelector('[placeholder="Password"]').value;
+    const email = document.querySelector('[placeholder="信箱"]').value;
+    const password = document.querySelector('[placeholder="密碼"]').value;
 
     const loginData = {
       provider: "native",

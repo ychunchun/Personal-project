@@ -1,4 +1,8 @@
 document.addEventListener("DOMContentLoaded", async function () {
+  // 解析 URL 中的 transactionId 參數
+  const urlParams = new URLSearchParams(window.location.search);
+  const AccountBookId = urlParams.get("AccountBookId");
+
   const form = document.getElementById("categoryForm");
 
   form.addEventListener("submit", async function (event) {
@@ -10,6 +14,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const data = {
       category_type: categoryType,
       category_name: categoryName,
+      AccountBookId: AccountBookId,
     };
 
     try {
@@ -30,7 +35,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           confirmButtonText: "OK",
         }).then(() => {
           // 跳轉到顯示類別畫面
-          window.location.href = "/admin/show_category.html";
+          window.location.href = "/admin/category_management.html";
         });
         // 清空輸入字段
         form.category_name.value = "";

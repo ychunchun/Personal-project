@@ -59,21 +59,23 @@
                 類別圖表
               </h4>
             </div>
-            <div class="card-body">
+            <div class="card-body" style="height: 678px !important;">
               <section class="content">
-              <center><div class="container">             
+              <center>
+                <div class="transaction-list">
+                  <h4><span id="total-amount"></span></h4>              
+                  </ul>
+                </div>
+                <div class="container" style="padding-left: 3px; padding-right: 3px; height: 320px; width: 320px !important;">             
               <br>
               <br>
-              <canvas id="doughnutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 347px;" width="694" height="500" class="chartjs-render-monitor"></canvas>               
+              <canvas id="doughnutChart" style="height: 320px; display: block; width: 320px !important;" class="chartjs-render-monitor"></canvas>               
                 <div class="container">
                   <h3><p id="date-range-text"></p></h3>
                 </div>
               </div>
   
-              <div class="transaction-list">
-                <h4><span id="total-amount"></span></h4>              
-                </ul>
-              </div></center>
+              </center>
             </section>
             </div>
           </div>
@@ -85,13 +87,13 @@
                 帳目資訊
               </h4>
             </div>
-            <div class="card-body">
+            <div class="card-body" style="height: 678px !important;">
               <section class="content">
               <center><div class="container">                                      
                 <div class="container">
                   <h3><p id="date-range-text"></p></h3>
                 </div>
-                <div class="card-body table-responsive p-0" style="height: 300px;">
+                <div class="card-body table-responsive p-0" style="height: 630px !important;">
                   <table class="table table-head-fixed text-nowrap">
                     <thead>
                       <tr>
@@ -158,7 +160,7 @@
               <!-- Add icons to the links using the .nav-icon class
                   with font-awesome or any other icon font library -->
               <li class="nav-item">
-                <a href="/admin/account_book.html" class="nav-link">
+                <a href="/admin/AccountBook Management.html" class="nav-link">
                   <i class="nav-icon fas fa-book white-icon"></i>
                   <p>
                    帳本管理
@@ -180,10 +182,18 @@
         <!-- /.sidebar -->
         <hr class="custom-hr">
         <div class="container">
-          <p class="custom-paragraph">類型與時間</p>
+          <p class="custom-paragraph">選擇帳本及過濾條件</p>
           <div class="centered-div">
-            <select id="accountName" name="account_book_name" class="custom-select"></select>
+            <select id="accountName" name="account_book_name" class="custom-select" style="margin-right: 63px !important;"></select>
           </div>
+          <div id="app">
+            <!-- <label for="date-range">Select Date Range:</label> -->
+            <input type="text" id="date-range" name="date_range" style="margin-left: 35px !important;"/>
+          </div>
+          <div class="centered-div">
+            <select id="memberName" name="member_name" class="custom-select" style="margin-right: 50px !important;"></select>
+          </div>
+          <p class="custom-paragraph">送出查詢</p>
           <div class="button22-container">
             <div>
               <button id="income" class="button22" value="收入">
@@ -195,13 +205,6 @@
                   支出
               </button>
             </div>
-          </div>
-          <div id="app">
-            <!-- <label for="date-range">Select Date Range:</label> -->
-            <input type="text" id="date-range" name="date_range" />
-          </div>
-          <div class="centered-div">
-            <select id="memberName" name="member_name" class="custom-select"></select>
           </div>
       </div>
       </div>

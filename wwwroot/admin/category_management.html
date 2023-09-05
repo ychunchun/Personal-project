@@ -2,7 +2,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Transaction Details</title>
+    <title>Category Managemaent</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.7/dist/sweetalert2.min.css"
@@ -46,54 +46,54 @@
       <!-- maincontent -->
       <div class="content-wrapper">
         <section class="content">
-            <div class="container">
-                <div class="card card-primary card-outline card-info">
-                    <div class="card-header">
-                        <h3><b>帳目詳細資訊</b></h3>
-                    </div>
-                    <div class="card-body box-profile">                   
-                        <ul class="list-group list-group-unbordered mb-3">
-                            <li class="list-group-item">
-                                <b class="float-left">帳本</b> <a class="float-right" id="account" style="color:#505962 !important"></a>
-                            </li>
-                            <li class="list-group-item">
-                                <b class="float-left">類別</b> <a class="float-right" id="category" style="color:#505962 !important"></a>                               
-                            </li>
-                            <li class="list-group-item">
-                                <b class="float-left">金額</b> <a class="float-right" id="amount" style="color:#505962 !important"></a>
-                            </li>
-                            <li class="list-group-item">
-                                <b class="float-left">日期</b> <a class="float-right" id="day" style="color:#505962 !important"></a>
-                            </li>
-                            <li class="list-group-item">
-                                <b class="float-left">細項紀錄</b> <a class="float-right" id="details" style="color:#505962 !important"></a>
-                            </li>
-                            <li class="list-group-item">
-                              <b class="float-left">紀錄者</b> <a class="float-right" id="recordedBy" style="color:#505962 !important"></a>
-                          </li>
-                        </ul>
-                        <div class="card-body row">
-                          <div class="col-md-6">
-                            <a href="/admin/modify_transaction.html?transactionId=${transactionId}"  class="btn btn-info btn-block modify-button" style="background-color:#e6e1c5; color:#505962; border-color: #505962 !important ;"><b>修改</b></a>
-                          </div>
-                          <div class="col-md-6">
-                            <a href="/admin/home.html" class="btn btn-info btn-block delete-button" style="background-color:#e6e1c5; color:#505962; border-color: #505962 !important;"><b>刪除</b></a>
-                          </div>
-                        </div>
-                    </div>
-                </div>
+          <div class="container">
+            <div class="card-header">
+              <h3><b>帳本類別管理頁</b></h3>
+              <h4>帳本名稱: 
+                 <span id="AccountBookName"></span>
+              </h4>
             </div>
-        </section>
+            <div class="card card-primary card-outline card-info">
+              <div class="card-body box-profile" style="height: 600px !important;">               
+                  <ul class="list-group list-group-unbordered mb-3">
+                    <div class="card-body table-responsive p-0" style="height: 590px;">
+                        <table class="table table-head-fixed text-nowrap">
+                          <thead>
+                            <tr>
+                            <th>名稱</th>
+                            <th>類型</th>
+                            <th></th>
+                            </tr>
+                          </thead>
+                          <tbody id="categoryTableBody">
+                            <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                  </ul>
+              </div>
+            </div>
+          </div>
+      </section>
+      <button  class="button22" style="position:fixed; right: 20px; bottom: 20px; height: 48px; width: 46px;;height:48px;width:46px !important;">
+        <a href="/admin/add_category.html" style=" color: #242d35 !important;">
+          <i class="nav-icon fas fa-plus-circle"></i>
+        </a>
+      </button>
     </div>
     </div>
-    <!-- Main Sidebar Container -->
-    <aside class="main-sidebar sidebar-dark-primary elevation-4">
-      <!-- Brand Logo -->
-      <a href="/admin/home.html" class="brand-link bg-cyan text-sm" style="background-color:#E6E1C5!important">
-        <img src="../Adminlte/dist/img/weblogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <!-- <h5><span class="brand-text font-weight-light">Show Me the Money</span></h5> -->
-        <img src="../Adminlte/dist/img/projectLogo.png" alt="Project Logo" class="custom-image">
-      </a>
+   <!-- Main Sidebar Container -->
+   <aside class="main-sidebar sidebar-dark-primary elevation-4" style="position:fixed; background-color:#242d35!important; overflow-y: clip!important">
+    <!-- Brand Logo -->
+    <a href="/admin/home.html" class="brand-link bg-cyan text-sm" style="background-color:#E6E1C5!important">
+      <img src="../Adminlte/dist/img/weblogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+      <!-- <h5><span class="brand-text font-weight-light">Show Me the Money</span></h5> -->
+      <img src="../Adminlte/dist/img/projectLogo.png" alt="Project Logo" class="custom-image">
+    </a>
 
       <!-- Sidebar -->
       <div class="sidebar">
@@ -103,7 +103,7 @@
             <img src="../Adminlte/dist/img/user6-128x128.jpg" class="img-circle elevation-2" alt="User Image">
           </div>
           <div class="info">
-            <a href="#" class="d-block">Mr.Banana</a>
+            <a href="#" class="d-block">michelin</a>
           </div>
         </div>
 
@@ -114,10 +114,10 @@
             <!-- Add icons to the links using the .nav-icon class
                 with font-awesome or any other icon font library -->
             <li class="nav-item">
-              <a href="/admin/AccountBook Management.html" class="nav-link">
+              <a href="/admin/account_book.html" class="nav-link">
                 <i class="nav-icon fas fa-book white-icon"></i>
                 <p>
-                 帳本管理
+                  帳本管理
                 </p>
               </a>
             </li>
@@ -152,7 +152,7 @@
        <!-- AdminLTE App -->
        <script src="../Adminlte/dist/js/adminlte.js"></script>
        <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.11/signalr.min.js"></script>
-      <script src="/script/transaction_detail.js"></script>
+      <script src="/script/category_management.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     </div>
   </body>

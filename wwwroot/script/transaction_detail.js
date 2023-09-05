@@ -24,38 +24,52 @@ document.addEventListener("DOMContentLoaded", async function () {
     ////////////////////delete api//////////////////
     const deleteButton = document.querySelector(".delete-button");
     deleteButton.addEventListener("click", async (event) => {
-      event.preventDefault(); //
-      console.log("Transaction ID:", transactionId);
-      const deleteResponse = await fetch(
-        `/api/transactions/TransactionStatus?transactionId=${transactionId}`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("access_token"),
-          },
-        }
-      );
+      event.preventDefault();
 
-      if (deleteResponse.ok) {
-        Swal.fire({
-          icon: "success",
-          title: "Success!",
-          text: "Transaction has been deleted successfully.",
-          confirmButtonText: "OK",
-        }).then(() => {
-          // 跳轉到顯示類別畫面
-          window.location.href = "/admin/home.html";
-          //如果按鈕被點擊，則傳遞訊息到AddTransaction Hub
-          console.log("Transaction deleted successfully");
-        });
-      } else {
-        console.error("Failed to delete transaction.");
-        Swal.fire({
-          icon: "error",
-          title: "Error!",
-          text: "Failed to delete transaction.",
-          confirmButtonText: "OK",
-        });
+      // 彈出確認框
+      const result = await Swal.fire({
+        title: "確認刪除",
+        text: "你確認刪除這個帳目嗎?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
+      });
+
+      // 如果user點擊
+      if (result.isConfirmed) {
+        console.log("Transaction ID:", transactionId);
+        const deleteResponse = await fetch(
+          `/api/transactions/TransactionStatus?transactionId=${transactionId}`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("access_token"),
+            },
+          }
+        );
+
+        if (deleteResponse.ok) {
+          Swal.fire({
+            icon: "success",
+            title: "成功!",
+            text: "帳目已被成功刪除",
+            confirmButtonText: "OK",
+          }).then(() => {
+            // 跳轉到顯示類別畫面
+            window.location.href = "/admin/home.html";
+            //如果按鈕被點擊，則傳遞訊息到AddTransaction Hub
+            console.log("Transaction deleted successfully");
+          });
+        } else {
+          console.error("Failed to delete transaction.");
+          Swal.fire({
+            icon: "error",
+            title: "Error!",
+            text: "Failed to delete transaction.",
+            confirmButtonText: "OK",
+          });
+        }
       }
     });
 

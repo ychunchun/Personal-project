@@ -29,6 +29,7 @@
       rel="stylesheet"
       href="../Adminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css"
     />
+    <link rel="stylesheet" href="/styles/other.css">
   </head>
   <body>
     <div class="wapper">
@@ -92,11 +93,12 @@
 Kevin add a income :Lottery $ 80 in test -->
 
       <!-- Main Sidebar Container -->
-      <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <aside class="main-sidebar sidebar-dark-primary elevation-4 " style="position:fixed; background-color:#242d35!important; overflow-y: clip!important">
         <!-- Brand Logo -->
-        <a href="index3.html" class="brand-link bg-cyan text-sm">
+        <a href="/admin/home.html" class="brand-link bg-cyan text-sm" style="background-color:#E6E1C5!important">
           <img src="../Adminlte/dist/img/weblogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-          <h5><span class="brand-text font-weight-light">Show Me the Money</span></h5>
+          <!-- <h5><span class="brand-text font-weight-light">Show Me the Money</span></h5> -->
+          <img src="../Adminlte/dist/img/projectLogo.png" alt="Project Logo" class="custom-image">
         </a>
 
         <!-- Sidebar -->
@@ -112,90 +114,27 @@ Kevin add a income :Lottery $ 80 in test -->
           </div>
 
 
-          <!-- Sidebar Menu -->
-          <nav class="mt-2">
+           <!-- Sidebar Menu -->
+           <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
               <!-- Add icons to the links using the .nav-icon class
                   with font-awesome or any other icon font library -->
               <li class="nav-item">
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./index.html" class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Dashboard v1</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./index2.html" class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Dashboard v2</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./index3.html" class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Dashboard v3</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="../Adminlte/pages/widgets.html" class="nav-link">
-                  <i class="nav-icon fas fa-th"></i>
+                <a href="/admin/AccountBook Management.html" class="nav-link">
+                  <i class="nav-icon fas fa-book white-icon"></i>
                   <p>
-                    Account
+                   帳本管理
                   </p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon fas fa-chart-pie"></i>
+                <a href="/admin/history.html" class="nav-link">
+                  <i class="nav-icon fas fa-history white-icon"></i>
                   <p>
-                    Charts
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="../Adminlte/pages/charts/chartjs.html" class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>ChartJS</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-            </li>            
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon fas fa-table"></i>
-                  <p>
-                    Categories
-                  </p>
-                </a>               
-              <li class="nav-item">
-                <a href="../Adminlte/pages/calendar.html" class="nav-link">
-                  <i class="nav-icon far fa-calendar-alt"></i>
-                  <p>
-                    History
+                    歷史編輯紀錄
                   </p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="../Adminlte/pages/gallery.html" class="nav-link">
-                  <i class="nav-icon far fa-image"></i>
-                  <p>
-                    Members
-                  </p>
-                </a>
-              </li>
-              <!-- <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon far fa-envelope"></i>
-                  <p>
-                    Notifications
-                  </p>
-                </a>
-              </li> -->
-                
             </ul>
           </nav>
           <!-- /.sidebar-menu -->

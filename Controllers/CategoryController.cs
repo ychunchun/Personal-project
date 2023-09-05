@@ -4,8 +4,9 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Personal_project.Models;
+using System.Security.Claims;
 
-namespace YourProjectName.Controllers
+namespace Personal_projecttName.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -36,7 +37,9 @@ namespace YourProjectName.Controllers
                 .Select(caa => new CategoryGetDto
                 {
                     display_category_type = caa.category.category_type,
-                    category_name = caa.category.category_name
+                    category_name = caa.category.category_name,
+                    category_and_account_id=caa.category_and_account_id,
+                    accountBookName=caa.account.account_book_name,
                 })
         .ToListAsync();
             return Ok(categories);
@@ -73,6 +76,32 @@ namespace YourProjectName.Controllers
             await _dbcontext.SaveChangesAsync();
 
             return Ok(newCategory);
+        }
+
+        [HttpPost("CategoryStatus")]
+        public async Task<ActionResult> CategoryStatus([FromBody] CategoryStatusDTO dto)
+        {
+             try
+            {
+                var category = await _dbcontext.CategoryAndAccount
+                    .FirstOrDefaultAsync(c => c.category_and_account_id == dto.category_and_account_id);
+
+                if (category != null)
+                {
+                    category.category_status = "delete";
+                    await _dbcontext.SaveChangesAsync();
+
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

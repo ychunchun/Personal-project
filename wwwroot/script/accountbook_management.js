@@ -34,10 +34,11 @@ function generateMemberTable(
         "btn btn-danger btn-sm delete-member-button text-center";
       //deleteButton.type = "button";
       deleteButton.setAttribute("data-memberid", member.memberId);
+      //deleteButton.setAttribute("id", "del");
       deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
-      deleteButton.href = "javascript:void(0)"; //避免默認預設行為#
       //增加刪除成員按鈕的監聽，以便觸發刪除後的動作
-      deleteButton.addEventListener("click", handleDeleteButtonClick);
+      deleteButton.addEventListener("click", handleDeleteButtonClickMember);
+
       deleteIconCell.appendChild(deleteButton);
     }
 
@@ -50,13 +51,12 @@ function generateMemberTable(
 }
 
 //刪除成員按鈕的觸發行為
-async function handleDeleteButtonClick(event) {
+async function handleDeleteButtonClickMember(event) {
   console.log("Delete button clicked");
   const memberId = event.currentTarget.getAttribute("data-memberid");
-
   const result = await Swal.fire({
     title: "確認刪除",
-    text: "你想刪除這位成員嗎?",
+    text: "你確認刪除這位成員嗎?",
     icon: "warning",
     showCancelButton: true,
     confirmButtonText: "Yes",
@@ -118,7 +118,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const accountBookCard = document.createElement("div");
         accountBookCard.className = "card";
 
-        // 使用模板字符串生成卡片的 HTML 结构
         accountBookCard.innerHTML = `
           <div class="card-header card-outline card-info">
             <b>
@@ -132,7 +131,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   ? `
                   <a class="btn btn-info btn-sm" href="/admin/modify_accountbook.html?AccountBookId=${
                     accountBook.accountBookId
-                  }">
+                  }" style="background-color:#505962; border-color: #505962 !important;">
                     <i class="fas fa-edit"></i>
                     修改帳本
                   </a>
@@ -150,7 +149,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     isMainAccountBook
                       ? ""
                       : `
-                  <a class="btn btn-info btn-sm" id="inviteButton" data-accountbookid="${accountBook.accountBookId}">
+                  <a class="btn btn-info btn-sm" id="inviteButton" data-accountbookid="${accountBook.accountBookId}" style="background-color:#505962; border-color: #505962 !important;">
                     <i class="fas fa-user-plus"></i>
                     邀請成員
                   `
@@ -158,18 +157,15 @@ document.addEventListener("DOMContentLoaded", function () {
                   `
                   : ""
               }
-                  <span id="message-container" style="display: none;"></span>
+              <span id="message-container" style="display: none;"></span>
                   </a>                  
-              <br>
-              <a class="btn btn-info btn-sm" href="#" data-accountbookid="${
+
+              <a class="btn btn-info btn-sm" href="/admin/category_management.html?AccountBookId=${
                 accountBook.accountBookId
-              }">
+              }" style="background-color:#505962; border-color: #505962 !important;">
                 <i class="fas fa-eye"></i>
                 帳本類別
               </a>
-              <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                <i class="fas fa-minus"></i>
-              </button>
             </div>
           </div>
           <div class="card-body">
@@ -227,8 +223,8 @@ async function handleDeleteButtonClick(event) {
   const accountBookId = event.currentTarget.getAttribute("data-accountbookid");
 
   const result = await Swal.fire({
-    title: "Confirm Deletion",
-    text: "Do you want to delete this account book?",
+    title: "確認刪除",
+    text: "你確認刪除這個帳本嗎?",
     icon: "warning",
     showCancelButton: true,
     confirmButtonText: "Yes",
@@ -284,7 +280,7 @@ async function handleInviteButtonClick(event, accountBookId) {
       const messageContainer = document.getElementById("message-container");
 
       // 顯示提示訊息
-      const successMessage = "您已成功複製網址";
+      const successMessage = "已成功複製網址";
       messageContainer.textContent = successMessage;
       messageContainer.style.display = "block";
 
@@ -301,42 +297,37 @@ async function handleInviteButtonClick(event, accountBookId) {
   }
 }
 
-/////////////////////判斷如果不是主帳本就給share link的button//////////////////////
-//     if (accountBook.accountBookType !== "main") {
-//       const inviteButton = accountBookCard.querySelector("#inviteButton");
-//       const accessTokenLink = accountBookCard.querySelector("#accessTokenLink");
-//       const accountBookId = accountBook.accountBookId;
+// if (messageContainer) {
+//   // Set the success message
+//   const successMessage =
+//   messageContainer.textContent = successMessage;
+//   messageContainer.style.display = "block";
 
-//       inviteButton.addEventListener("click", async () => {
-//         try {
-//           const response = await fetch(
-//             `/api/Member/MemberShareLink?AccountBookId=${accountBookId}`,
-//             {
-//               method: "GET",
-//               headers: {
-//                 "Content-Type": "application/json",
-//                 Authorization: "Bearer " + localStorage.getItem("access_token"),
-//               },
-//             }
-//           );
+//   // Set the timeout to clear the message
+//   setTimeout(() => {
+//     messageContainer.textContent = "";
+//     messageContainer.style.display = "none";
+//   }, 3000);
 
-//           if (response.ok) {
-//             const data = await response.json();
-//             const accessToken = data.accountBookToken;
-//             console.log("accessToken", accessToken);
-//             const completeLink = `http://localhost:5158/admin/login.html?token=${accessToken}`;
-//             const linkText = `Shared Link: ${completeLink}`;
-//             accessTokenLink.textContent = linkText;
-//             accessTokenLink.style.display = "block";
-//             // const accessTokenLink = document.getElementById("accessTokenLink");
-//             // accessTokenLink.innerHTML = `<a href="${completeLink}" target="_blank">Access Token Link</a>`;
-//             // accessTokenLink.style.display = "block";
-//           } else {
-//             console.error("Failed to generate access token");
-//           }
-//         } catch (error) {
-//           console.error("An error occurred:", error);
-//         }
-//       });
-//     }
+// } else {
+//   console.error("Message container not found:", accountBook.accountBookId);
+// }
+
+// //測試刪除人員的code
+// document.addEventListener("click", function (event) {
+//   if (event.target.id === "del") {
+//   }
+// });
+
+// var delbtn = document.getElementById("del");
+// document.addEventListener("click", function () {
+//   console.log("223444");
+//   var memberId = null;
+//   var h4Tags = document.getElementById("del");
+//   h4Tags.forEach(function (h4Tag) {
+//     h4Tag.addEventListener("click", function () {
+//       memberId = h4Tag.getAttribute("name");
+//       console.log("Member ID:", memberId);
+//     });
 //   });
+// });
