@@ -1,3 +1,4 @@
+let deleteButton2;
 function generateMemberTable(
   accountBookId,
   members,
@@ -29,61 +30,19 @@ function generateMemberTable(
       currentUserId === adminUser &&
       member.role !== "admin"
     ) {
-      const deleteButton = document.createElement("button");
-      deleteButton.className =
+      const deleteButton2 = document.createElement("button");
+      deleteButton2.className =
         "btn btn-danger btn-sm delete-member-button text-center";
-      //deleteButton.type = "button";
-      deleteButton.setAttribute("data-memberid", member.memberId);
-      //deleteButton.setAttribute("id", "del");
-      deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
-      //增加刪除成員按鈕的監聽，以便觸發刪除後的動作
-      deleteButton.addEventListener("click", handleDeleteButtonClickMember);
-
-      deleteIconCell.appendChild(deleteButton);
+      deleteButton2.setAttribute("data-memberid", member.memberId);
+      deleteButton2.innerHTML = '<i class="fas fa-trash" id="trash-icon"></i>';
+      deleteIconCell.appendChild(deleteButton2);
     }
-
     row.appendChild(deleteIconCell);
 
     memberTableBody.appendChild(row);
   });
 
   return memberTableBody;
-}
-
-//刪除成員按鈕的觸發行為
-async function handleDeleteButtonClickMember(event) {
-  console.log("Delete button clicked");
-  const memberId = event.currentTarget.getAttribute("data-memberid");
-  const result = await Swal.fire({
-    title: "確認刪除",
-    text: "你確認刪除這位成員嗎?",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonText: "Yes",
-    cancelButtonText: "No",
-  });
-
-  if (result.isConfirmed) {
-    try {
-      const response = await fetch("/api/Member/MemberStatus", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-        body: JSON.stringify({ MemberId: memberId }),
-      });
-      console.log("Fetch response:", response);
-
-      if (response.ok) {
-        location.reload();
-      } else {
-        console.error("成員刪除失敗");
-      }
-    } catch (error) {
-      console.error("發生錯誤:", error);
-    }
-  }
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -157,7 +116,6 @@ document.addEventListener("DOMContentLoaded", function () {
                   `
                   : ""
               }
-              <span id="message-container" style="display: none;"></span>
                   </a>                  
 
               <a class="btn btn-info btn-sm" href="/admin/category_management.html?AccountBookId=${
@@ -187,6 +145,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   adminUser
                 ).outerHTML
               }
+              
             </table>
           </div>
         `;
@@ -212,16 +171,68 @@ document.addEventListener("DOMContentLoaded", function () {
       const totalProfit = data.totalProfit;
       const totalProfitSpan = document.getElementById("totalProfit");
       totalProfitSpan.textContent = totalProfit;
+
+      //刪除成員按鈕的監聽
+      // document.addEventListener("click", handleDeleteButtonClickMember);
+      // document
+      //   .getElementById("trash-icon")
+      //   .addEventListener("click", handleDeleteButtonClickMember);
+      // deleteButton2.addEventListener("click", handleDeleteButtonClickMember);
+      document
+        .querySelector(".delete-member-button")
+        .addEventListener("click", handleDeleteButtonClickMember);
     })
     .catch((error) => {
       console.error("錯誤：無法獲取數據。", error);
     });
 });
 
+//刪除成員按鈕的觸發行為
+async function handleDeleteButtonClickMember() {
+  console.log("Delete button clicked");
+  // const memberId1 = event.target.getAttribute("data-memberid");
+  // console.log("1", memberId1);
+  // const memberId3 = event.target.this("data-memberid");
+  // console.log("3", memberId3);
+  //const memberId = event.currentTarget.getAttribute("data-memberid");
+  const memberId = this.getAttribute("data-memberid");
+  const result = await Swal.fire({
+    title: "確認刪除",
+    text: "你確認刪除這位成員嗎?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes",
+    cancelButtonText: "No",
+  });
+
+  if (result.isConfirmed) {
+    try {
+      const response = await fetch("/api/Member/MemberStatus", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+        body: JSON.stringify({ MemberId: memberId }),
+      });
+      console.log("Fetch response:", response);
+
+      if (response.ok) {
+        location.reload();
+      } else {
+        console.error("成員刪除失敗");
+      }
+    } catch (error) {
+      console.error("發生錯誤:", error);
+    }
+  }
+}
+
 // 刪除帳本觸發動作
 async function handleDeleteButtonClick(event) {
-  const accountBookId = event.currentTarget.getAttribute("data-accountbookid");
-
+  const accountBookId = event.target.getAttribute("data-accountbookid");
+  // const memberId2 = event.target.getAttribute("data-accountbookid");
+  // console.log("2", memberId2);
   const result = await Swal.fire({
     title: "確認刪除",
     text: "你確認刪除這個帳本嗎?",
@@ -276,58 +287,19 @@ async function handleInviteButtonClick(event, accountBookId) {
       // 複製網址到剪貼板
       await navigator.clipboard.writeText(completeLink);
 
-      //<span id="message-container-${accountBook.accountBookId}"
-      const messageContainer = document.getElementById("message-container");
-
-      // 顯示提示訊息
-      const successMessage = "已成功複製網址";
-      messageContainer.textContent = successMessage;
-      messageContainer.style.display = "block";
-
-      // 設定提示訊息消失的定時器
-      setTimeout(() => {
-        messageContainer.textContent = "";
-        messageContainer.style.display = "none";
-      }, 3000);
+      // 複製成功訊息
+      const successMessage = "已成功複製網址！您可以開始分享";
+      Swal.fire({
+        icon: "success",
+        title: "成功",
+        text: successMessage,
+        showConfirmButton: false,
+        timer: 3000,
+      });
     } else {
-      console.error("Failed to generate access token");
+      console.error("連結生成失敗");
     }
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error("發生錯誤:", error);
   }
 }
-
-// if (messageContainer) {
-//   // Set the success message
-//   const successMessage =
-//   messageContainer.textContent = successMessage;
-//   messageContainer.style.display = "block";
-
-//   // Set the timeout to clear the message
-//   setTimeout(() => {
-//     messageContainer.textContent = "";
-//     messageContainer.style.display = "none";
-//   }, 3000);
-
-// } else {
-//   console.error("Message container not found:", accountBook.accountBookId);
-// }
-
-// //測試刪除人員的code
-// document.addEventListener("click", function (event) {
-//   if (event.target.id === "del") {
-//   }
-// });
-
-// var delbtn = document.getElementById("del");
-// document.addEventListener("click", function () {
-//   console.log("223444");
-//   var memberId = null;
-//   var h4Tags = document.getElementById("del");
-//   h4Tags.forEach(function (h4Tag) {
-//     h4Tag.addEventListener("click", function () {
-//       memberId = h4Tag.getAttribute("name");
-//       console.log("Member ID:", memberId);
-//     });
-//   });
-// });

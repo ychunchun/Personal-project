@@ -116,7 +116,7 @@
 Kevin add a income :Lottery $ 80 in test -->
 
        <!-- Main Sidebar Container -->
-      <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <aside class="main-sidebar sidebar-dark-primary elevation-4 " style="position:fixed; background-color:#242d35!important; overflow-y: clip!important">
         <!-- Brand Logo -->
         <a href="/admin/home.html" class="brand-link bg-cyan text-sm" style="background-color:#E6E1C5!important">
           <img src="../Adminlte/dist/img/weblogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
@@ -132,7 +132,7 @@ Kevin add a income :Lottery $ 80 in test -->
               <img src="../Adminlte/dist/img/user6-128x128.jpg" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-              <a href="#" class="d-block">michelin</a>
+              <a href="/admin/user_profile.html" class="d-block"  id="username"></a>
             </div>
           </div>
 
@@ -166,10 +166,10 @@ Kevin add a income :Lottery $ 80 in test -->
         <div class="container">
           <p class="custom-paragraph">過濾帳本及成員</p>
           <div class="centered-div">
-            <select id="accountName" name="account_book_name" class="custom-select"></select>
+            <select id="accountName" name="account_book_name" class="custom-select" style="margin-right: 63px !important;"></select>
           </div>
           <div class="centered-div">
-            <select id="memberName" name="member_name" class="custom-select"></select>
+            <select id="memberName" name="member_name" class="custom-select" style="margin-right: 50px !important;"></select>
           </div>
       </div>
       </div>
@@ -191,6 +191,7 @@ Kevin add a income :Lottery $ 80 in test -->
        <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.9/signalr.min.js"></script>
       <script src="/script/history.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+      <script src="/script/user_bar_name.js"></script>
     </div>
   </body>
 </html>

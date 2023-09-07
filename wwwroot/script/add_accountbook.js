@@ -28,18 +28,18 @@ form.addEventListener("submit", async (event) => {
     if (response.ok) {
       Swal.fire({
         icon: "success",
-        title: "Success!",
-        text: "Account Book added successfully.",
+        title: "成功!",
+        text: "帳本新增成功.",
         confirmButtonText: "OK",
       }).then(() => {
-        window.location.href = "/admin/account_book.html";
+        window.location.href = "/admin/AccountBook Management.html";
       });
     } else {
       console.error("Failed to add account book.");
       Swal.fire({
         icon: "error",
-        title: "Error!",
-        text: "Failed to delete transaction.",
+        title: "失敗",
+        text: "帳本刪除失敗",
         confirmButtonText: "OK",
       });
     }

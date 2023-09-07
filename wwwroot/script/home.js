@@ -239,6 +239,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     const data = await response.json();
+    // 時間近到遠排序，針對filteredWithTotal裡面的物件
+    data.filteredWithTotal.sort((a, b) => new Date(b.day) - new Date(a.day));
     generateChart(data);
 
     // 渲染數據到表格

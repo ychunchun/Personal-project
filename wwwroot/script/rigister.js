@@ -12,9 +12,9 @@ document.addEventListener("DOMContentLoaded", function () {
   registerButton.addEventListener("click", async function (event) {
     event.preventDefault(); // 阻止表單的預設提交行為
 
-    const fullName = document.querySelector('[placeholder="Full name"]').value;
-    const email = document.querySelector('[placeholder="Email"]').value;
-    const password = document.querySelector('[placeholder="Password"]').value;
+    const fullName = document.querySelector('[placeholder="名字"]').value;
+    const email = document.querySelector('[placeholder="信箱"]').value;
+    const password = document.querySelector('[placeholder="密碼"]').value;
 
     const userData = {
       user_name: fullName,

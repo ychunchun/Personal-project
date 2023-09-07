@@ -29,9 +29,9 @@ document.addEventListener("DOMContentLoaded", async function () {
       if (response.ok) {
         // 成功處理回應，顯示成功通知
         Swal.fire({
-          icon: "success",
-          title: "Success!",
-          text: "Category has been added successfully.",
+          icon: "成功",
+          title: "成功",
+          text: "已成功新增類別",
           confirmButtonText: "OK",
         }).then(() => {
           // 跳轉到顯示類別畫面
@@ -42,9 +42,9 @@ document.addEventListener("DOMContentLoaded", async function () {
       } else {
         // 處理錯誤回應，顯示錯誤通知
         Swal.fire({
-          icon: "error",
-          title: "Error!",
-          text: "Failed to add category.",
+          icon: "錯誤",
+          title: "錯誤",
+          text: "類別新增失敗",
           confirmButtonText: "OK",
         });
       }
