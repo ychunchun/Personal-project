@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const data = {
       category_type: categoryType,
       category_name: categoryName,
-      AccountBookId: AccountBookId,
+      account_book_id: AccountBookId,
     };
 
     try {
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           confirmButtonText: "OK",
         }).then(() => {
           // 跳轉到顯示類別畫面
-          window.location.href = "/admin/category_management.html";
+          window.location.href = `/admin/category_management.html?AccountBookId=${AccountBookId}`;
         });
         // 清空輸入字段
         form.category_name.value = "";

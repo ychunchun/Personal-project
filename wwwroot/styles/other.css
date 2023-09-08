@@ -145,3 +145,18 @@ body {
 .delete-button {
   flex: 1; /* 均分水平 */
 }
+
+.background {
+  /* background-image: url("../Adminlte/dist/img/index_background.png"); */
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100vh;
+}
+
+@media screen and (max-width: 852px) {
+  .button22 {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+  }
+}

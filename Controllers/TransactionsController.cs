@@ -178,7 +178,7 @@ namespace Personal_project.Controllers
                 // await AddToNotifications(existingTransaction);
 
                 // 返回更新後的交易記錄
-                return Ok(existingTransaction);
+                return Ok();
             }
             catch (Exception ex)
             {

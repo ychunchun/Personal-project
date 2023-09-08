@@ -282,7 +282,8 @@ async function handleInviteButtonClick(event, accountBookId) {
     if (response.ok) {
       const data = await response.json();
       const accessToken = data.accountBookToken;
-      const completeLink = `http://localhost:5158/admin/login.html?token=${accessToken}`;
+      // const completeLink = `http://localhost:5158/admin/login.html?token=${accessToken}`;
+      const completeLink = `http://18.182.92.152/admin/login.html?token=${accessToken}`;
 
       // 複製網址到剪貼板
       await navigator.clipboard.writeText(completeLink);

@@ -185,12 +185,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         console.log("Received result from API:", result);
         Swal.fire({
           icon: "success",
-          title: "Success!",
-          text: "Transaction has been added successfully.",
+          title: "成功!",
+          text: "帳目新增成功(:",
           confirmButtonText: "OK",
         }).then(() => {
           // 跳轉到顯示類別畫面
-          //window.location.href = "/admin/show_category.html";
+          window.location.href = "/admin/home.html";
           //如果按鈕被點擊，則傳遞訊息到AddTransaction Hub
           console.log("okkkk");
           connection.invoke("SendAddTransaction", JSON.stringify(result));
@@ -202,8 +202,8 @@ document.addEventListener("DOMContentLoaded", async function () {
       } else {
         Swal.fire({
           icon: "error",
-          title: "Error!",
-          text: "Failed to add transaction.",
+          title: "錯誤:(",
+          text: "帳目新增失敗",
           confirmButtonText: "OK",
         });
       }

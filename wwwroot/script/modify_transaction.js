@@ -171,10 +171,23 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       if (response.ok) {
         // 更新成功，執行相應的處理
-        console.log("Transaction updated successfully.");
+        Swal.fire({
+          icon: "success",
+          title: "成功！",
+          text: "帳目更新成功(:",
+          confirmButtonText: "OK",
+        }).then(() => {
+          // 跳轉到顯示類別畫面
+          window.location.href = "/admin/home.html";
+        });
       } else {
         // 更新失敗，執行相應的處理
-        console.error("Failed to update transaction.");
+        Swal.fire({
+          icon: "error",
+          title: "錯誤:(",
+          text: "帳目更新失敗",
+          confirmButtonText: "OK",
+        });
       }
     } catch (error) {
       console.error("Error sending request:", error);

@@ -75,7 +75,7 @@ namespace Personal_projecttName.Controllers
             _dbcontext.CategoryAndAccount.Add(newCategoryAndAccount);
             await _dbcontext.SaveChangesAsync();
 
-            return Ok(newCategory);
+            return Ok();
         }
 
         [HttpPost("CategoryStatus")]
