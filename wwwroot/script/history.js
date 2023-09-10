@@ -22,10 +22,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       option.value = member.userName;
       memberSelect.appendChild(option);
     });
-
-    // if (selectedAccountBook.accountBookType !== "main") {
-    //   memberSelect.value = "";
-    // }
   }
 
   //獲取帳本數據，並填充下拉選單。同時設置預設值
@@ -52,14 +48,25 @@ document.addEventListener("DOMContentLoaded", async function () {
       });
 
       const firstAccountBook = accountBooks[0];
-      if (firstAccountBook) {
-        populateMemberDropdown(firstAccountBook);
-        // 設定預設值
-        accountNameSelect.value = firstAccountBook.accountBookName;
-        memberSelect.value = ""; // 所有成員
+      // if (firstAccountBook) {
+      //   populateMemberDropdown(firstAccountBook);
+      //   // 設定預設值
+      //   accountNameSelect.value = firstAccountBook.accountBookName;
+      //   memberSelect.value = ""; // 所有成員
 
-        fetchTransactionsIfNeeded(); // 獲取交易數據
+      //   fetchTransactionsIfNeeded(); // 獲取交易數據
+      // }
+
+      if (firstAccountBook.accountBookType === "main") {
+        //populateMemberDropdown(firstAccountBook);
+        // 設定預設值
+        memberSelect.value = firstAccountBook.members[0].userId;
+      } else {
+        // 如果第一個帳本的類型不是 "main"，設置第二個下拉選單（成員選擇框）的預設值為第一個成員的 userId
+        memberSelect.value = ""; // 所有成員
       }
+
+      populateMemberDropdown(firstAccountBook);
 
       //根據帳本選擇不同，給予不同的值
       accountNameSelect.addEventListener("change", async function () {
@@ -73,6 +80,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           populateMemberDropdown(selectedAccountBook);
         }
       });
+      fetchTransactionsIfNeeded();
     } catch (error) {
       console.error("Error fetching account books:", error);
     }
@@ -196,57 +204,3 @@ document.addEventListener("DOMContentLoaded", async function () {
     fetchTransactionsIfNeeded();
   });
 });
-
-// const firstAccountBook = accountBooks[0];
-//       if (firstAccountBook) {
-//         if (firstAccountBook.accountBookType === "main") {
-//           // 如果第一個帳本的類型是 "main"，設置第二個下拉選單（成員）的預設值為空
-//           memberSelect.value = ""; // 所有成員
-//         } else {
-//           // 如果第一個帳本的類型不是 "main"，設置第二個下拉選單（成員選擇框）的預設值為第一個成員的 userId
-//           memberSelect.value = firstAccountBook.members[0].userId;
-//         }
-//         populateMemberDropdown(firstAccountBook);
-//         // 設定預設值
-//         accountNameSelect.value = firstAccountBook.accountBookId;
-
-//         const currentDate = new Date();
-//         const year = currentDate.getFullYear();
-//         const month = currentDate.getMonth() + 1;
-//         const daysInMonth = new Date(year, month, 0).getDate();
-
-//         const defaultStartDate = `${year}-${month
-//           .toString()
-//           .padStart(2, "0")}-01`;
-//         const defaultEndDate = `${year}-${month
-//           .toString()
-//           .padStart(2, "0")}-${daysInMonth}`;
-
-//         dateSelect.value = `${defaultStartDate} - ${defaultEndDate}`;
-
-//         categoryButtons.forEach((btn) => {
-//           btn.classList.remove("selected");
-//           if (btn.value === "支出") {
-//             btn.classList.add("selected");
-//           }
-//         });
-
-//         fetchTransactionsIfNeeded(); // 獲取交易數據
-//       }
-
-//       //根據帳本選擇不同，給予不同的值
-//       accountNameSelect.addEventListener("change", async function () {
-//         const selectedAccountBookName = accountNameSelect.value;
-//         const selectedAccountBook = accountBooks.find(
-//           (accountBook) =>
-//             accountBook.accountBookName === selectedAccountBookName
-//         );
-
-//         if (selectedAccountBook) {
-//           populateMemberDropdown(selectedAccountBook);
-//         }
-//       });
-//     } catch (error) {
-//       console.error("Error fetching account books:", error);
-//     }
-//   }

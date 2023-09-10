@@ -74,56 +74,53 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       const firstAccountBook = accountBooks[0];
 
-      if (firstAccountBook) {
-        if (firstAccountBook.accountBookType === "main") {
-          //populateMemberDropdown(firstAccountBook);
-          // 設定預設值
-          memberSelect.value = firstAccountBook.members[0].userId;
-        } else {
-          // 如果第一個帳本的類型不是 "main"，設置第二個下拉選單（成員選擇框）的預設值為第一個成員的 userId
-          memberSelect.value = ""; // 所有成員
-        }
-
-        populateMemberDropdown(firstAccountBook);
+      if (firstAccountBook.accountBookType === "main") {
         // 設定預設值
-        accountNameSelect.value = firstAccountBook.accountBookId;
-
-        const currentDate = new Date();
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth() + 1;
-        const daysInMonth = new Date(year, month, 0).getDate();
-
-        const defaultStartDate = `${year}-${month
-          .toString()
-          .padStart(2, "0")}-01`;
-        const defaultEndDate = `${year}-${month
-          .toString()
-          .padStart(2, "0")}-${daysInMonth}`;
-
-        dateSelect.value = `${defaultStartDate} - ${defaultEndDate}`;
-
-        categoryButtons.forEach((btn) => {
-          btn.classList.remove("selected");
-          if (btn.value === "支出") {
-            btn.classList.add("selected");
-          }
-        });
-
-        fetchTransactionsIfNeeded(); // 獲取交易數據
+        memberSelect.value = firstAccountBook.members[0].userId;
+      } else {
+        // 如果第一個帳本的類型不是 "main"，設置第二個下拉選單（成員選擇框）的預設值為第一個成員的 userId
+        memberSelect.value = ""; // 所有成員
       }
+
+      populateMemberDropdown(firstAccountBook);
+
+      const currentDate = new Date();
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth() + 1;
+      const daysInMonth = new Date(year, month, 0).getDate();
+
+      const defaultStartDate = `${year}-${month
+        .toString()
+        .padStart(2, "0")}-01`;
+      const defaultEndDate = `${year}-${month
+        .toString()
+        .padStart(2, "0")}-${daysInMonth}`;
+
+      dateSelect.value = `${defaultStartDate} - ${defaultEndDate}`;
+
+      categoryButtons.forEach((btn) => {
+        btn.classList.remove("selected");
+        if (btn.value === "支出") {
+          btn.classList.add("selected");
+        }
+      });
 
       //根據帳本選擇不同，給予不同的值
       accountNameSelect.addEventListener("change", async function () {
-        const selectedAccountBookName = accountNameSelect.value;
+        console.log("Selected Account Book:", accountNameSelect.value);
+        const selectedAccountBookId = accountNameSelect.value;
         const selectedAccountBook = accountBooks.find(
-          (accountBook) =>
-            accountBook.accountBookName === selectedAccountBookName
+          (accountBook) => accountBook.accountBookId === selectedAccountBookId
         );
 
         if (selectedAccountBook) {
           populateMemberDropdown(selectedAccountBook);
+          fetchTransactionsIfNeeded();
         }
       });
+
+      // 調用 fetchTransactionsIfNeeded 更新交易記錄
+      //fetchTransactionsIfNeeded();
     } catch (error) {
       console.error("Error fetching account books:", error);
     }
