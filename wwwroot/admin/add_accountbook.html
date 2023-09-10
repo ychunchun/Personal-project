@@ -35,10 +35,12 @@
         </ul>
         <ul class="navbar-nav ml-auto">
           <li class="nav-item dropdown">
-            <a href="/admin/notification.html">
+              <!-- <a href="/admin/notification.html">
               <i class="far fa-bell "></i>
-              <!-- <span class="badge badge-warning navbar-badge">15</span> -->
-            </a>
+            </a> -->
+            <div id="logout">
+              <i class="fas fa-sign-out-alt" >登出</i>
+            </div>
           </li>
         </ul>
       </nav>
@@ -148,8 +150,9 @@
        <!-- AdminLTE App -->
        <script src="../Adminlte/dist/js/adminlte.js"></script>
        <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.11/signalr.min.js"></script>
-      <script src="/script/add_accountbook.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+       <script src="/script/token_validation.js"></script>
+       <script src="/script/add_accountbook.js"></script>
       <script src="/script/user_bar_name.js"></script>
     </div>
   </body>

@@ -49,17 +49,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
         Swal.fire({
           icon: "success",
-          title: "Success!",
-          text: "Logged in successfully.",
+          title: "成功!",
+          text: "登入成功",
           confirmButtonText: "OK",
         }).then(() => {
+          localStorage.removeItem("accessToken");
           window.location.href = "/admin/home.html";
         });
       } else {
         Swal.fire({
           icon: "error",
-          title: "Error!",
-          text: "Failed to log in.",
+          title: "錯誤",
+          text: "登入失敗",
           confirmButtonText: "OK",
         });
       }

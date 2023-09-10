@@ -35,10 +35,12 @@
         </ul>
         <ul class="navbar-nav ml-auto">
           <li class="nav-item dropdown">
-            <a href="/admin/notification.html">
+            <!-- <a href="/admin/notification.html">
               <i class="far fa-bell "></i>
-              <!-- <span class="badge badge-warning navbar-badge">15</span> -->
-            </a>
+            </a> -->
+            <div id="logout">
+              <i class="fas fa-sign-out-alt" >登出</i>
+            </div>
           </li>
         </ul>
       </nav>
@@ -79,9 +81,10 @@
             </div>
           </div>
       </section>
-      <button  class="button22" style="position:fixed; right: 20px; bottom: 20px; height: 48px; width: 46px;;height:48px;width:46px !important;">
+      <button  class="button22" style="position:fixed; right: 20px; bottom: 20px; height: 40px; width: 100px !important;">
         <a href="/admin/add_category.html" style=" color: #242d35 !important;">
-          <i class="nav-icon fas fa-plus-circle"></i>
+          <!-- <i class="nav-icon fas fa-plus-circle"></i> -->
+          新增類別
         </a>
       </button>
     </div>
@@ -152,8 +155,9 @@
        <!-- AdminLTE App -->
        <script src="../Adminlte/dist/js/adminlte.js"></script>
        <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.11/signalr.min.js"></script>
-      <script src="/script/category_management.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+       <script src="/script/token_validation.js"></script>
+       <script src="/script/category_management.js"></script>
       <script src="/script/user_bar_name.js"></script>
     </div>
   </body>

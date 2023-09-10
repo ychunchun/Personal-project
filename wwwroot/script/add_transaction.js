@@ -5,28 +5,16 @@ document.addEventListener("DOMContentLoaded", async function () {
   const form = document.getElementById("transaction-form");
   const accountNameSelect = document.getElementById("accountName");
 
-  //////////////////////////以下為預設值設定（但目前還沒有成功）//////////////////////
+  //////////////////////////以下為預設值設定//////////////////////
   // 預設值
   const defaultCategoryType = "支出";
 
   // 是設值觸發事件
   categoryTypeSelect.value = defaultCategoryType;
-  categoryTypeSelect.dispatchEvent(new Event("change"));
-
-  // 設置帳本名稱為預設值
-  if (accountNameSelect.options.length > 0) {
-    accountNameSelect.value = accountNameSelect.options[0].value;
-  }
-
-  // 獲取第一個類別名稱為預設
-  const firstCategoryOption = categoryNameSelect.options[0];
-  if (firstCategoryOption) {
-    const defaultCategoryName = firstCategoryOption.value;
-    categoryNameSelect.value = defaultCategoryName;
-  }
 
   // 訂定日期的預設值
   form.transaction_date.value = new Date().toISOString().slice(0, 10);
+
   ///////////////下拉選單給user選accountbook///////////////////////
 
   // 發送 API 請求以獲取帳簿數據
@@ -35,7 +23,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       const response = await fetch("/api/AccountBook/GetAccountBook", {
         method: "GET",
         headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"), // 添加 JWT Token
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
         },
       });
 
@@ -52,21 +40,28 @@ document.addEventListener("DOMContentLoaded", async function () {
         option.value = accountBook.accountBookId;
         accountNameSelect.appendChild(option);
       });
+
+      if (accountBooks.length > 0) {
+        accountNameSelect.value = accountBooks[0].accountBookId;
+      }
+      // 處理categoryType變化的函數
+      handleCategoryTypeChange();
     } catch (error) {
       console.error("Error fetching account books:", error);
     }
   }
 
-  // Add event listener to accountNameSelect
+  // 對accountNameSelect加上監聽
   accountNameSelect.addEventListener("change", (event) => {
     const selectedAccountId = event.target.value;
     console.log("Selected Account Book ID:", selectedAccountId);
+    handleCategoryTypeChange();
   });
 
   fetchAccountBooks();
 
   //////////////針對category_type的選擇，給出相對應的category_name的下拉選單/////////////
-  categoryTypeSelect.addEventListener("change", async function () {
+  async function handleCategoryTypeChange() {
     const selectedCategoryType = categoryTypeSelect.value;
     const selectedAccountBookId = accountNameSelect.value;
 
@@ -76,7 +71,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       );
       const categories = await response.json();
 
-      // Clear previous options
+      // 清空之前的選項
       categoryNameSelect.innerHTML = "";
 
       // Populate the categoryNameSelect with fetched categories
@@ -95,7 +90,13 @@ document.addEventListener("DOMContentLoaded", async function () {
     } catch (error) {
       console.error("Error fetching categories:", error);
     }
-  });
+  }
+
+  // 頁面第一次載入的時候使用預設值
+  handleCategoryTypeChange();
+
+  // 之後使用監聽追蹤user的選擇
+  categoryTypeSelect.addEventListener("change", handleCategoryTypeChange);
 
   /////////////////針對所有要新增的transaction欄位做處理，打addtransaction api/////////////
   //連線到AddTransaction Hub
@@ -167,6 +168,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       amount: amount,
       transaction_date: formattedTransactionDate,
       details: details,
+      accountbookId: selectedAccountBookId,
     };
 
     try {
@@ -186,7 +188,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         Swal.fire({
           icon: "success",
           title: "成功!",
-          text: "帳目新增成功(:",
+          text: "帳目新增成功",
           confirmButtonText: "OK",
         }).then(() => {
           // 跳轉到顯示類別畫面
@@ -202,7 +204,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       } else {
         Swal.fire({
           icon: "error",
-          title: "錯誤:(",
+          title: "錯誤",
           text: "帳目新增失敗",
           confirmButtonText: "OK",
         });

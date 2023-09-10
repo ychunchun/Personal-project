@@ -21,13 +21,14 @@ namespace Personal_project.Controllers
         }
 
 
+        
         [HttpPost("AddTransaction")]
         public async Task<ActionResult> AddTransaction(TransactionAddDto input)
         {
             try
             {
                  // 在這裡查找category_id，使用input.category_name和input.category_type
-                int categoryAndAccountId = GetCategoryAndAccountId(input.category_name, input.category_type, input.account_book_name);
+                int categoryAndAccountId = GetCategoryAndAccountId(input.category_name, input.category_type, input.accountbookId);
 
                  // 設定台灣時間的 TimeZoneInfo
                 TimeZoneInfo taipeiTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Taipei Standard Time");
@@ -43,7 +44,7 @@ namespace Personal_project.Controllers
                     amount = Convert.ToInt32(input.amount), //int轉string
                     transaction_date = input.transaction_date,
                     details = input.details,
-                    account_book_id = accountBooks.account_book_id,
+                    account_book_id = input.accountbookId,
                     transaction_status = "live"
                 };
                 _dbcontext.Transactions.Add(newTransactions);
@@ -60,8 +61,8 @@ namespace Personal_project.Controllers
                     user_name = user != null ? user.user_name : "",
                     transaction_id = newTransactions.transaction_id,
                     category_id = newTransactions.category_and_account_id,
-                    category_name = category != null ? category.category_name : "",
-                    category_type = category != null ? category.category_type : "",
+                    category_name = input.category_name,
+                    category_type = input.category_type,
                     amount = newTransactions.amount,
                     transaction_date = newTransactions.transaction_date.HasValue
                         ? newTransactions.transaction_date.Value.ToString("yyyy-MM-dd")
@@ -93,52 +94,52 @@ namespace Personal_project.Controllers
                 await _dbcontext.SaveChangesAsync();
 
 
-                // 獲取帳本成員人數
-                var membersIds = await _dbcontext.Members
-                    .Where(m => m.account_book_id == newTransactions.account_book_id)
-                    .Select(m => m.user_id)
-                    .ToListAsync();
-                Console.WriteLine("Members IDs: " + string.Join(", ", membersIds));
+                // // 獲取帳本成員人數
+                // var membersIds = await _dbcontext.Members
+                //     .Where(m => m.account_book_id == newTransactions.account_book_id)
+                //     .Select(m => m.user_id)
+                //     .ToListAsync();
+                // Console.WriteLine("Members IDs: " + string.Join(", ", membersIds));
 
-                //判斷集合裡面是否存在任何元素，如果沒有的話代表帳本只有一個人，因此不需要發送通知
-                if (membersIds.Any())
-                {
-                    Console.WriteLine("Members IDs have values.");
-                    string membersIdsString = string.Join(", ", membersIds);
-                    Console.WriteLine("Members IDs: " + membersIdsString);
+                // //判斷集合裡面是否存在任何元素，如果沒有的話代表帳本只有一個人，因此不需要發送通知
+                // if (membersIds.Any())
+                // {
+                //     Console.WriteLine("Members IDs have values.");
+                //     string membersIdsString = string.Join(", ", membersIds);
+                //     Console.WriteLine("Members IDs: " + membersIdsString);
 
-                    //創建一個陣列存取寫入帳本所有的成員id
-                    var targetUserIds = new List<int>(membersIds.Select(id => id.Value));
-                    targetUserIds.Remove(input.user_id);
+                //     //創建一個陣列存取寫入帳本所有的成員id
+                //     var targetUserIds = new List<int>(membersIds.Select(id => id.Value));
+                //     targetUserIds.Remove(input.user_id);
 
-                     // 寫入到Notification table，根據陣列長度進行迴圈，並存入回圈值到target
-                    foreach (var targetUserId in targetUserIds)
-                    {
-                        var newNotification = new Notifications
-                        {
-                            user_id = result.user_id,
-                            target = targetUserId,  // Store the member's ID in the target column
-                            transaction_id = result.transaction_id,
-                            operation_type = "新增",
-                            notification_status = "live",
-                            current_time = DateTime.Now,
-                            user_name = result.user_name,
-                            amount = result.amount,
-                            category_name = result.category_name,
-                            category_type = result.category_type,
-                            account_book_name = result.account_book_name,
-                            account_book_id = result.account_book_id,
-                        };
+                //      // 寫入到Notification table，根據陣列長度進行迴圈，並存入回圈值到target
+                //     foreach (var targetUserId in targetUserIds)
+                //     {
+                //         var newNotification = new Notifications
+                //         {
+                //             user_id = result.user_id,
+                //             target = targetUserId,  // Store the member's ID in the target column
+                //             transaction_id = result.transaction_id,
+                //             operation_type = "新增",
+                //             notification_status = "live",
+                //             current_time = DateTime.Now,
+                //             user_name = result.user_name,
+                //             amount = result.amount,
+                //             category_name = result.category_name,
+                //             category_type = result.category_type,
+                //             account_book_name = result.account_book_name,
+                //             account_book_id = result.account_book_id,
+                //         };
 
-                        _dbcontext.Notifications.Add(newNotification);
-                    }
+                //         _dbcontext.Notifications.Add(newNotification);
+                //     }
 
-                    await _dbcontext.SaveChangesAsync();
-                }
-                else
-                {
-                    Console.WriteLine("No member IDs found.");
-                }
+                //     await _dbcontext.SaveChangesAsync();
+                // }
+                // else
+                // {
+                //     Console.WriteLine("No member IDs found.");
+                // }
 
                 return Ok(result);
             }
@@ -150,6 +151,7 @@ namespace Personal_project.Controllers
         }
 
 
+        [Authorize]
         [HttpPost("UpdateTransaction")]
         public async Task<ActionResult> UpdateTransaction(TransactionUpdateDto input)
         {
@@ -164,7 +166,7 @@ namespace Personal_project.Controllers
                 }
 
                 // 更新交易屬性值
-                existingTransaction.category_and_account_id = GetCategoryAndAccountId(input.category_name, input.category_type, input.account_book_name);
+                existingTransaction.category_and_account_id = GetCategoryAndAccountId(input.category_name, input.category_type, input.accountbookId);
                 existingTransaction.amount = (int?)input.amount;
                 existingTransaction.transaction_date = input.transaction_date;
                 existingTransaction.details = input.details;
@@ -174,10 +176,37 @@ namespace Personal_project.Controllers
                 await _dbcontext.SaveChangesAsync();
 
                 // 同步新增至其他表格
-                // await AddToHistory(existingTransaction);
-                // await AddToNotifications(existingTransaction);
+                //await AddToHistory(existingTransaction);
 
-                // 返回更新後的交易記錄
+                 // 取得使用者的身份識別資訊，使用Claim解析token，ClaimIdentity提供多種類型
+                var identity = HttpContext.User.Identity as ClaimsIdentity; //HttpContext.User.Identity 屬性取得使用者的身份資訊，ClaimsIdentity 代表使用者的身份識別
+                var emailClaim = identity.FindFirst(ClaimTypes.Email); 
+                var email = emailClaim.Value; //emailClaim是物件, email是字串變數
+
+                // 根據 email 從資料庫中尋找使用者
+                var user = _dbcontext.Users.SingleOrDefault(u => u.email == email);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                //新增到History table
+                 var newHistory = new History
+                {
+                    transaction_id = input.transactionId,
+                    operation_type = "修改",
+                    operation_date = DateTime.Now, // 修改時的操作日期
+                    user_name = user.user_name,
+                    user_id = user.user_id,
+                    account_book_id = input.accountbookId,
+                    amount = (int?)input.amount,
+                    category_name = input.category_name,
+                    category_type = input.category_type,
+                };
+
+                _dbcontext.History.Add(newHistory);
+                await _dbcontext.SaveChangesAsync();
+
                 return Ok();
             }
             catch (Exception ex)
@@ -207,62 +236,67 @@ namespace Personal_project.Controllers
             await _dbcontext.SaveChangesAsync();
         }
 
-        // 同步新增至 Notifications 表格
-        private async Task AddToNotifications(Transactions transaction)
-        {
-            var membersIds = await _dbcontext.Members
-                .Where(m => m.account_book_id == transaction.account_book_id)
-                .Select(m => m.user_id)
-                .ToListAsync();
+        // // 同步新增至 Notifications 表格
+        // private async Task AddToNotifications(Transactions transaction)
+        // {
+        //     var membersIds = await _dbcontext.Members
+        //         .Where(m => m.account_book_id == transaction.account_book_id)
+        //         .Select(m => m.user_id)
+        //         .ToListAsync();
 
-            if (membersIds.Any())
-            {
-                var targetUserIds = new List<int>(membersIds.Select(id => id.Value));
-                targetUserIds.Remove((int)transaction.user_id);
+        //     if (membersIds.Any())
+        //     {
+        //         var targetUserIds = new List<int>(membersIds.Select(id => id.Value));
+        //         targetUserIds.Remove((int)transaction.user_id);
 
-                foreach (var targetUserId in targetUserIds)
-                {
-                    var newNotification = new Notifications
-                    {
-                        user_id = transaction.user_id,
-                        target = targetUserId,
-                        transaction_id = transaction.transaction_id,
-                        operation_type = "修改",
-                        notification_status = "live",
-                        current_time = DateTime.Now,
-                        user_name = transaction.user.user_name,
-                        amount = transaction.amount,
-                        category_name = transaction.category_and_account.category.category_name,
-                        category_type = transaction.category_and_account.category.category_type,
-                        account_book_name = transaction.account_book.account_book_name,
-                        account_book_id = transaction.account_book_id,
-                    };
+        //         foreach (var targetUserId in targetUserIds)
+        //         {
+        //             var newNotification = new Notifications
+        //             {
+        //                 user_id = transaction.user_id,
+        //                 target = targetUserId,
+        //                 transaction_id = transaction.transaction_id,
+        //                 operation_type = "修改",
+        //                 notification_status = "live",
+        //                 current_time = DateTime.Now,
+        //                 user_name = transaction.user.user_name,
+        //                 amount = transaction.amount,
+        //                 category_name = transaction.category_and_account.category.category_name,
+        //                 category_type = transaction.category_and_account.category.category_type,
+        //                 account_book_name = transaction.account_book.account_book_name,
+        //                 account_book_id = transaction.account_book_id,
+        //             };
 
-                    _dbcontext.Notifications.Add(newNotification);
-                }
+        //             _dbcontext.Notifications.Add(newNotification);
+        //         }
 
-                await _dbcontext.SaveChangesAsync();
-            }
-        }
+        //         await _dbcontext.SaveChangesAsync();
+        //     }
+        // }
 
 
 
         //利用category_name以及category_type查找對應的category_id
-        private int GetCategoryAndAccountId(string category_name, string category_type, string account_book_name)
+        private int GetCategoryAndAccountId(string category_name, string category_type, int accountbookId)
         {
-            var categoryAndAccount = _dbcontext.CategoryAndAccount
-                .FirstOrDefault(caa => caa.category.category_name == category_name &&
-                                    caa.category.category_type == category_type &&
-                                    caa.account.account_book_name == account_book_name);
+            // 根據 name 和 type 在 Categories 表中找到對應的 category_id
+            var category = _dbcontext.Categories.FirstOrDefault(c => c.category_name == category_name && c.category_type == category_type);
 
-            if (categoryAndAccount != null)
+            if (category != null)
             {
-                return categoryAndAccount.category_and_account_id;
+                // 找到了對應的 category，現在查詢 CategoryAndAccount 表來獲取 category_and_account_id
+                var categoryAndAccount = _dbcontext.CategoryAndAccount.FirstOrDefault(caa => caa.category_id == category.category_id && caa.account_id == accountbookId);
+
+                if (categoryAndAccount != null)
+                {
+                    return categoryAndAccount.category_and_account_id;
+                }
             }
 
             // 如果找不到對應的 category_and_account，則返回一個特定的值
             return -1; // -1 表示未找到
         }
+
 
 
         [Authorize]
@@ -408,7 +442,7 @@ namespace Personal_project.Controllers
                     Details = transaction.details,   
                     UserName = transaction.user.user_name,
                     TransactionId=transaction.transaction_id,
-
+                    AccountBookId=transaction.account_book_id
                 };
 
                 return Ok(transactionDetail);

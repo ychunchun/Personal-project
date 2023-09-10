@@ -6,10 +6,6 @@
     <!-- <link rel="stylesheet" href="/styles/home.css" /> -->
     <title>Accountbook</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="../Adminlte/plugins/fontawesome-free/css/all.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="../Adminlte/dist/css/adminlte.min.css">
     <!-- overlayScrollbars -->
@@ -18,6 +14,10 @@
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/daterangepicker@3.1.0/daterangepicker.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.7/dist/sweetalert2.min.css"
     />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
@@ -39,10 +39,12 @@
         </ul>
         <ul class="navbar-nav ml-auto">
           <li class="nav-item dropdown">
-            <a href="/admin/notification.html">
+            <!-- <a href="/admin/notification.html">
               <i class="far fa-bell "></i>
-              <!-- <span class="badge badge-warning navbar-badge">15</span> -->
-            </a>
+            </a> -->
+            <div id="logout">
+              <i class="fas fa-sign-out-alt" >登出</i>
+            </div>
           </li>
         </ul>
       </nav>
@@ -121,9 +123,10 @@
             </div>
             </div>
           </div>
-          <button  class="button22" style="position:fixed; right: 20px; bottom: 20px; height: 48px; width: 46px;;height:48px;width:46px!important;">
+          <button  class="button22" style="position:fixed; right: 20px; bottom: 20px; height: 40px; width: 100px!important;">
             <a href="/admin/add_transaction.html" style=" color: #242d35 !important;">
-              <i class="nav-icon fas fa-plus-circle"></i>
+              <!-- <i class="nav-icon fas fa-plus-circle"></i> -->
+              新增帳目
             </a>
           </button>
         </div>
@@ -193,7 +196,7 @@
           <div class="centered-div">
             <select id="memberName" name="member_name" class="custom-select" style="margin-right: 50px !important;"></select>
           </div>
-          <p class="custom-paragraph">送出查詢</p>
+          <p class="custom-paragraph">點選下方送出查詢</p>
           <div class="button22-container">
             <div>
               <button id="income" class="button22" value="收入">
@@ -222,7 +225,9 @@
       <!-- overlayScrollbars -->
       <script src="../Adminlte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
       <!-- AdminLTE App -->
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
       <script src="../Adminlte/dist/js/adminlte.js"></script>
+      <script src="/script/token_validation.js"></script>
       <script src="/script/home.js"></script>
       <script src="/script/user_bar_name.js"></script>
     </div>

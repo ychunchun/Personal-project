@@ -46,10 +46,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       option.value = member.userId;
       memberSelect.appendChild(option);
     });
-
-    if (selectedAccountBook.accountBookType !== "main") {
-      memberSelect.value = "";
-    }
   }
 
   //獲取帳本數據，並填充下拉選單。同時設置預設值
@@ -72,15 +68,25 @@ document.addEventListener("DOMContentLoaded", async function () {
       accountBooks.forEach((accountBook) => {
         const option = document.createElement("option");
         option.textContent = accountBook.accountBookName;
+        option.value = accountBook.accountBookId;
         accountNameSelect.appendChild(option);
       });
 
       const firstAccountBook = accountBooks[0];
+
       if (firstAccountBook) {
+        if (firstAccountBook.accountBookType === "main") {
+          //populateMemberDropdown(firstAccountBook);
+          // 設定預設值
+          memberSelect.value = firstAccountBook.members[0].userId;
+        } else {
+          // 如果第一個帳本的類型不是 "main"，設置第二個下拉選單（成員選擇框）的預設值為第一個成員的 userId
+          memberSelect.value = ""; // 所有成員
+        }
+
         populateMemberDropdown(firstAccountBook);
         // 設定預設值
-        accountNameSelect.value = firstAccountBook.accountBookName;
-        memberSelect.value = ""; // 所有成員
+        accountNameSelect.value = firstAccountBook.accountBookId;
 
         const currentDate = new Date();
         const year = currentDate.getFullYear();
@@ -203,15 +209,20 @@ document.addEventListener("DOMContentLoaded", async function () {
     const selectedCategoryType =
       document.querySelector(".button22.selected").value;
     const selectedDateRange = dateSelect.value;
-    const selectedAccountBookName = accountNameSelect.value;
+    const selectedAccountBookId = accountNameSelect.value;
     const selectedMemberId = memberSelect.value;
+
+    // if (selectedAccountBook) {
+    //   const selectedAccountBookId = selectedAccountBook.accountBookId;
 
     fetchTransactions(
       selectedCategoryType,
       selectedDateRange,
-      selectedAccountBookName,
+      //selectedAccountBookName,
+      selectedAccountBookId,
       selectedMemberId
     );
+    // }
   }
 
   await fetchAccountBooks();
@@ -220,12 +231,12 @@ document.addEventListener("DOMContentLoaded", async function () {
   async function fetchTransactions(
     categoryType,
     dateRange,
-    accountBookName,
+    //accountBookName,
+    accountBookId,
     memberId
   ) {
-    // Fetch data from API using provided parameters
     const response = await fetch(
-      `/api/Home/GetFilteredTransactions?dateRange=${dateRange}&categoryType=${categoryType}&accountBookName=${accountBookName}&userId=${memberId}`,
+      `/api/Home/GetFilteredTransactions?dateRange=${dateRange}&categoryType=${categoryType}&account_book_id=${accountBookId}&userId=${memberId}`,
       {
         method: "GET",
         headers: {

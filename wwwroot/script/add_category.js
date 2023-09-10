@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       if (response.ok) {
         // 成功處理回應，顯示成功通知
         Swal.fire({
-          icon: "成功",
+          icon: "success",
           title: "成功",
           text: "已成功新增類別",
           confirmButtonText: "OK",
@@ -42,9 +42,9 @@ document.addEventListener("DOMContentLoaded", async function () {
       } else {
         // 處理錯誤回應，顯示錯誤通知
         Swal.fire({
-          icon: "錯誤",
+          icon: "error",
           title: "錯誤",
-          text: "類別新增失敗",
+          text: "類別新增失敗 (請檢查欄位格式且不得為空值)",
           confirmButtonText: "OK",
         });
       }

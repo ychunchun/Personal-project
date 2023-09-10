@@ -35,23 +35,24 @@
         </ul>
         <ul class="navbar-nav ml-auto">
           <li class="nav-item dropdown">
-            <a href="/admin/notification.html">
+            <!-- <a href="/admin/notification.html">
               <i class="far fa-bell "></i>
-              <p id="bell"></p>
-              <li class="nav-item me-3 me-lg-0">
-                <div class="dropdown">
-                    <a class="nav-link link-white me-3  hidden-arrow" data-bs-toggle="dropdown" href="#" id="navbarDropdownMenuLink" role="button"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-envelope-open"></i>
-                        <span id="notificationBadge" class="badge rounded-pill badge-notification bg-danger"></span>
-                    </a>
-                     <ul id="dropdownMenu" class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-                    </ul>
-                </div>
-            </li>
-              <!-- <span class="badge badge-warning navbar-badge">15</span> -->
-            </a>
+            </a> -->
+            <div id="logout">
+              <i class="fas fa-sign-out-alt" >登出</i>
+            </div>
           </li>
+          <!-- <li class="nav-item me-3 me-lg-0">
+            <div class="dropdown">
+              <a class="nav-link link-white me-3  hidden-arrow" data-bs-toggle="dropdown" href="#" id="navbarDropdownMenuLink" role="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-envelope-open"></i>
+                <span id="notificationBadge" class="badge rounded-pill badge-notification bg-danger"></span>
+              </a>
+              <ul id="dropdownMenu" class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+              </ul>
+            </div>
+          </li> -->
         </ul>
       </nav>
 
@@ -86,7 +87,7 @@
                           <div class="form-group row">
                             <label for="inputEmail3" class="col-sm-2 col-form-label">金額</label>
                               <div class="col-sm-10">
-                                <input type="number" class="form-control" id="amount" name="amount" step="0.01" placeholder="TWD" required title="請填寫金額">
+                                <input type="number" class="form-control" id="amount" name="amount" placeholder="TWD" required title="請填寫金額" min="0" max="999999999">
                               </div>
                           </div> 
                           <div class="form-group row">
@@ -190,10 +191,11 @@
        <!-- AdminLTE App -->
        <script src="../Adminlte/dist/js/adminlte.js"></script>
        <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.11/signalr.min.js"></script>
-      <script src="/script/add_transaction.js"></script>
-      <script src="/script/signalR.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
-      <script src="/script/user_bar_name.js"></script>
+       <script src="/script/signalR.js"></script>
+       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>     
+       <script src="/script/token_validation.js"></script>
+       <script src="/script/user_bar_name.js"></script>
+       <script src="/script/add_transaction.js"></script>          
     </div>
   </body>
 </html>

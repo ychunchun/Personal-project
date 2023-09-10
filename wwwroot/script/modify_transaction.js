@@ -34,6 +34,13 @@ document.addEventListener("DOMContentLoaded", async function () {
         option.value = accountBook.accountBookId;
         accountNameSelect.appendChild(option);
       });
+
+      // 自動設定第一個帳本為預設值
+      if (accountBooks.length > 0) {
+        accountNameSelect.value = accountBooks[0].accountBookId;
+        // 觸發帳本選擇，以追蹤使用者選擇
+        accountNameSelect.dispatchEvent(new Event("change"));
+      }
     } catch (error) {
       console.error("Error fetching account books:", error);
     }
@@ -115,6 +122,9 @@ document.addEventListener("DOMContentLoaded", async function () {
       const transactionDetails = await response.json();
       // 將獲取的交易詳細資訊填充到表單元素中
       fillFormWithTransactionDetails(transactionDetails);
+      accountNameSelect.value = transactionDetails.accountBookId;
+      // 觸發帳本選擇事件，以觸發相應的類別下拉選單填充
+      accountNameSelect.dispatchEvent(new Event("change"));
     } catch (error) {
       console.error("Error fetching transaction details:", error);
     }
@@ -129,20 +139,19 @@ document.addEventListener("DOMContentLoaded", async function () {
     const categoryTypeSelect = document.getElementById("categoryType");
     const categoryNameSelect = document.getElementById("categoryName");
 
-    accountNameSelect.value = details.accountBookName;
+    accountNameSelect.value = details.accountBookId;
     categoryTypeSelect.value = details.categoryType;
-    // 觸發類別類型選擇事件，以填充對應的類別名稱選項
-    categoryTypeSelect.dispatchEvent(new Event("change"));
     categoryNameSelect.value = details.categoryName;
     amountInput.value = details.amount;
     transactionDateInput.value = details.day.slice(0, 10); // 格式化日期
     detailsInput.value = details.details;
+    // 觸發類別類型選擇事件，以填充對應的類別名稱選項
+    categoryTypeSelect.dispatchEvent(new Event("change"));
   }
 
   form.addEventListener("submit", async function (event) {
     event.preventDefault();
 
-    //這一段會引起回傳值變500
     const selectedAccountBookId = accountNameSelect.value;
     const selectedAccountBookOption = accountNameSelect.querySelector(
       `[value="${selectedAccountBookId}"]`
@@ -158,6 +167,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       amount: parseFloat(amountInput.value),
       transaction_date: transactionDateInput.value,
       details: detailsInput.value,
+      accountbookId: selectedAccountBookId,
     };
 
     try {
@@ -165,6 +175,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
         },
         body: JSON.stringify(updatedTransactionData),
       });
@@ -174,7 +185,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         Swal.fire({
           icon: "success",
           title: "成功！",
-          text: "帳目更新成功(:",
+          text: "帳目更新成功",
           confirmButtonText: "OK",
         }).then(() => {
           // 跳轉到顯示類別畫面
@@ -184,8 +195,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         // 更新失敗，執行相應的處理
         Swal.fire({
           icon: "error",
-          title: "錯誤:(",
-          text: "帳目更新失敗",
+          title: "錯誤",
+          text: "帳目更新失敗 (請檢查欄位格式且不得為空值)",
           confirmButtonText: "OK",
         });
       }

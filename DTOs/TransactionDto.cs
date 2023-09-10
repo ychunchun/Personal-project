@@ -10,6 +10,7 @@ public class TransactionAddDto
     public string details { get; set; }
     public int user_id{get;set;}
     public string account_book_name { get; set; }
+    public int accountbookId{get;set;}
 }
 
 public class TransactionUpdateDto
@@ -22,5 +23,6 @@ public class TransactionUpdateDto
     public string details { get; set; }
     public int user_id{get;set;}
     public string account_book_name { get; set; }
+    public int accountbookId{get;set;}
 }
 

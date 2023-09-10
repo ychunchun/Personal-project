@@ -12,7 +12,7 @@ public class AccountBookDTO
 public class AccountBookAddDTO
 {
     public string AccountBookName { get; set; }
-    public int? InitialBalance { get; set; }
+    public int InitialBalance { get; set; }
 }
 
 public class AccountBookStatusDTO
@@ -30,7 +30,7 @@ public class MemberRoleAndUserNameDTO
 
 public class AccountBookUpdateDto
 {
-    public int? AccountBookId { get; set; }
+    public int AccountBookId { get; set; }
     public string  AccountBookName{ get; set; }
-    public int? InitialBalance { get; set; }
+    public int InitialBalance { get; set; }
 }

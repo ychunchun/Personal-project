@@ -154,9 +154,13 @@ body {
 }
 
 @media screen and (max-width: 852px) {
-  .button22 {
+  .special-button {
     position: fixed;
     top: 20px;
     left: 20px;
   }
+}
+
+#logout i {
+  cursor: pointer;
 }

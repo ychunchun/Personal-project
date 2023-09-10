@@ -113,7 +113,8 @@ namespace Personal_project.Controllers
                         (transaction, caa) => new
                         {
                             TransactionAmount = transaction.amount,
-                            CategoryType = caa.category.category_type
+                            CategoryType = caa.category.category_type,
+                            CategoryAndAccount_id=caa.category_and_account_id
                         })
                     .ToListAsync();
 
@@ -131,7 +132,7 @@ namespace Personal_project.Controllers
                     InitialBalance = accountBook.InitialBalance,
                     AdminUser=accountBook.AdminUser,
                     Profit = profit,
-                    Members = memberRolesAndUserNames
+                    Members = memberRolesAndUserNames,
                 });
             }
 

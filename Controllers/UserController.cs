@@ -201,6 +201,7 @@ namespace YourProject.Controllers
 
         [Authorize] //經過驗證的user
         [HttpGet("userprofile")]
+        
         public IActionResult GetUserProfile()
         {
             // 取得使用者的身份識別資訊，使用Claim解析token，ClaimIdentity提供多種類型

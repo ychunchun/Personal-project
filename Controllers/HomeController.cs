@@ -22,9 +22,9 @@ namespace Personal_project.Controllers
 
         //////////////////根據categoryType以及dateRange，過濾同時符合兩個條件的transaction////////////////
         [HttpGet("GetFilteredTransactions")]
-        public async Task<IActionResult> GetFilteredTransactions(string categoryType, string dateRange,string accountBookName, int? UserId)
+        public async Task<IActionResult> GetFilteredTransactions(string categoryType, string dateRange,int account_book_id, int? UserId)
         {   
-             if (string.IsNullOrEmpty(dateRange) || string.IsNullOrEmpty(accountBookName))
+             if (string.IsNullOrEmpty(dateRange))
             {
                 return BadRequest("無效輸入");
             }
@@ -57,10 +57,10 @@ namespace Personal_project.Controllers
             }
 
             //如果有帳本名稱，就繼續篩選特定帳本的transaction
-            if (!string.IsNullOrEmpty(accountBookName))
+            if (account_book_id!=null)
             {
                 var targetAccountBookId = _dbcontext.AccountBooks
-                    .Where(ab => ab.account_book_name == accountBookName)
+                    .Where(ab => ab.account_book_id == account_book_id)
                     .Select(ab => ab.account_book_id)
                     .FirstOrDefault();
 

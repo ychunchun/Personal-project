@@ -198,7 +198,7 @@ async function handleDeleteButtonClickMember() {
   const memberId = this.getAttribute("data-memberid");
   const result = await Swal.fire({
     title: "確認刪除",
-    text: "你確認刪除這位成員嗎?",
+    text: "確認要刪除這位成員嗎?",
     icon: "warning",
     showCancelButton: true,
     confirmButtonText: "Yes",
@@ -235,7 +235,7 @@ async function handleDeleteButtonClick(event) {
   // console.log("2", memberId2);
   const result = await Swal.fire({
     title: "確認刪除",
-    text: "你確認刪除這個帳本嗎?",
+    text: "確認要刪除這個帳本嗎?",
     icon: "warning",
     showCancelButton: true,
     confirmButtonText: "Yes",
@@ -282,8 +282,8 @@ async function handleInviteButtonClick(event, accountBookId) {
     if (response.ok) {
       const data = await response.json();
       const accessToken = data.accountBookToken;
-      // const completeLink = `http://localhost:5158/admin/login.html?token=${accessToken}`;
-      const completeLink = `http://18.182.92.152/admin/login.html?token=${accessToken}`;
+      const completeLink = `http://localhost:5158/admin/login.html?token=${accessToken}`;
+      //const completeLink = `https://yuchunchun.online/admin/login.html?token=${accessToken}`;
 
       // 複製網址到剪貼板
       await navigator.clipboard.writeText(completeLink);

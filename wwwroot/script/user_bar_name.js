@@ -1,4 +1,13 @@
 document.addEventListener("DOMContentLoaded", async function () {
+  const logout = document.getElementById("logout");
+
+  //登出
+  logout.addEventListener("click", function () {
+    this.style.cursor = "pointer";
+    localStorage.clear();
+    window.location.href = "/admin/index.html";
+  });
+
   try {
     const response = await fetch("/api/User/userprofile", {
       method: "GET",
