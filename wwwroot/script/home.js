@@ -68,7 +68,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       accountBooks.forEach((accountBook) => {
         const option = document.createElement("option");
         option.textContent = accountBook.accountBookName;
-        option.value = accountBook.accountBookId;
         accountNameSelect.appendChild(option);
       });
 
@@ -82,8 +81,11 @@ document.addEventListener("DOMContentLoaded", async function () {
         memberSelect.value = ""; // 所有成員
       }
 
-      populateMemberDropdown(firstAccountBook);
+      //   console.log("firstAccountBook:", firstAccountBook.accountBookName);
+      //   console.log(typeof firstAccountBook.accountBookId);
+      //accountNameSelect.value = firstAccountBook.accountBookName;
 
+      //fetchTransactionsIfNeeded(firstAccountBook.accountBookId);
       const currentDate = new Date();
       const year = currentDate.getFullYear();
       const month = currentDate.getMonth() + 1;
@@ -104,23 +106,21 @@ document.addEventListener("DOMContentLoaded", async function () {
           btn.classList.add("selected");
         }
       });
+      populateMemberDropdown(firstAccountBook);
 
       //根據帳本選擇不同，給予不同的值
       accountNameSelect.addEventListener("change", async function () {
-        console.log("Selected Account Book:", accountNameSelect.value);
-        const selectedAccountBookId = accountNameSelect.value;
+        const selectedAccountBookName = accountNameSelect.value;
         const selectedAccountBook = accountBooks.find(
-          (accountBook) => accountBook.accountBookId === selectedAccountBookId
+          (accountBook) =>
+            accountBook.accountBookName === selectedAccountBookName
         );
 
         if (selectedAccountBook) {
           populateMemberDropdown(selectedAccountBook);
-          fetchTransactionsIfNeeded();
         }
       });
-
-      // 調用 fetchTransactionsIfNeeded 更新交易記錄
-      //fetchTransactionsIfNeeded();
+      fetchTransactionsIfNeeded();
     } catch (error) {
       console.error("Error fetching account books:", error);
     }
@@ -201,25 +201,41 @@ document.addEventListener("DOMContentLoaded", async function () {
     fetchTransactionsIfNeeded();
   });
 
+  // 建立一個函數，將accountBookName轉換成accountBookId
+  function getAccountBookIdByName(accountBookName) {
+    const selectedAccountBook = accountBooks.find(
+      (accountBook) => accountBook.accountBookName === accountBookName
+    );
+
+    if (selectedAccountBook) {
+      return selectedAccountBook.accountBookId;
+    }
+
+    return ""; // 如果找不到符合的accountBookName
+  }
+
   //根據當前選中的參數獲取數據，用於變動選擇時可以獲取最新數據
   function fetchTransactionsIfNeeded() {
     const selectedCategoryType =
       document.querySelector(".button22.selected").value;
     const selectedDateRange = dateSelect.value;
-    const selectedAccountBookId = accountNameSelect.value;
+    const selectedAccountBookName = accountNameSelect.value;
     const selectedMemberId = memberSelect.value;
+    const accountBookId = getAccountBookIdByName(selectedAccountBookName);
 
-    // if (selectedAccountBook) {
-    //   const selectedAccountBookId = selectedAccountBook.accountBookId;
+    // console.log("selectedCategoryType:", selectedCategoryType);
+    // console.log("selectedDateRange:", selectedDateRange);
+    // console.log("selectedAccountBookName:", selectedAccountBookName);
+    // console.log("selectedMemberId:", selectedMemberId);
+    // console.log("accountBookId:", accountBookId);
 
     fetchTransactions(
       selectedCategoryType,
       selectedDateRange,
-      //selectedAccountBookName,
-      selectedAccountBookId,
+      selectedAccountBookName,
+      //accountBookId,
       selectedMemberId
     );
-    // }
   }
 
   await fetchAccountBooks();
@@ -228,10 +244,11 @@ document.addEventListener("DOMContentLoaded", async function () {
   async function fetchTransactions(
     categoryType,
     dateRange,
-    //accountBookName,
-    accountBookId,
+    accountBookName,
     memberId
   ) {
+    // Fetch data from API using provided parameters
+    const accountBookId = getAccountBookIdByName(accountBookName);
     const response = await fetch(
       `/api/Home/GetFilteredTransactions?dateRange=${dateRange}&categoryType=${categoryType}&account_book_id=${accountBookId}&userId=${memberId}`,
       {

@@ -48,14 +48,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       });
 
       const firstAccountBook = accountBooks[0];
-      // if (firstAccountBook) {
-      //   populateMemberDropdown(firstAccountBook);
-      //   // 設定預設值
-      //   accountNameSelect.value = firstAccountBook.accountBookName;
-      //   memberSelect.value = ""; // 所有成員
-
-      //   fetchTransactionsIfNeeded(); // 獲取交易數據
-      // }
 
       if (firstAccountBook.accountBookType === "main") {
         //populateMemberDropdown(firstAccountBook);
@@ -94,7 +86,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     const selectedMemberValue = selectedMemberOption.value;
 
     // 找到選擇的帳簿對應的 accountBookId 和 userName
-    // 在此處找到選擇的帳簿對應的 accountBookId 和 userName
     const selectedAccountBook = accountBooks.find(
       (accountBook) => accountBook.accountBookName === selectedAccountBookName
     );

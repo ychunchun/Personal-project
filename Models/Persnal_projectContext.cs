@@ -163,6 +163,7 @@ public partial class Persnal_projectContext : DbContext
 
             entity.Property(e => e.email).HasMaxLength(255);
             entity.Property(e => e.password).HasMaxLength(255);
+            entity.Property(e => e.profile_image).HasMaxLength(255);
             entity.Property(e => e.provider).HasMaxLength(50);
             entity.Property(e => e.user_name).HasMaxLength(255);
         });

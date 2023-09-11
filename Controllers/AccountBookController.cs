@@ -41,7 +41,7 @@ namespace Personal_project.Controllers
 
             //根據當前頁面user的token，透過Members table給出其所擁有的AccountBook資訊
             var accountbooks = await _dbcontext.Members
-                .Where(m => m.user_id == user.user_id)
+                .Where(m => m.user_id == user.user_id  && m.member_status == "live") // 如果成員離開帳本，該成員就看不到該帳本
                 .Join(_dbcontext.AccountBooks,
                     member=>member.account_book_id,
                     accountBook=>accountBook.account_book_id,
@@ -98,7 +98,8 @@ namespace Personal_project.Controllers
                                 Role = member.role,
                                 UserId= (int)member.user_id,
                                 UserName = userNameDisplay,
-                                MemberId=member.member_id
+                                MemberId=member.member_id,
+                                Image=member.user.profile_image
                             });
                         }
                     }
@@ -132,6 +133,8 @@ namespace Personal_project.Controllers
                     InitialBalance = accountBook.InitialBalance,
                     AdminUser=accountBook.AdminUser,
                     Profit = profit,
+                    Expenses=expenses,
+                    Income=incomes,
                     Members = memberRolesAndUserNames,
                 });
             }

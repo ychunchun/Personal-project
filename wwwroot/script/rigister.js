@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
       Swal.fire({
         icon: "error",
         title: "錯誤",
-        text: "名字格式不符合要求 (只能是長度15碼以內的中英文字)",
+        html: `<b>名字格式不符合要求</b><br><b>(只能是長度15碼以內的中英文字)</b>`,
         confirmButtonText: "OK",
       });
       return;
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
       Swal.fire({
         icon: "error",
         title: "錯誤",
-        text: "信箱格式不符合要求（例如：user@example.com）",
+        html: `<b>信箱格式不符合要求</b><br><b>（例如：user@example.com）</b>`,
         confirmButtonText: "OK",
       });
       return;
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
       Swal.fire({
         icon: "error",
         title: "錯誤",
-        text: "密碼格式不符合要求 （必須是介於6~12碼的，大小寫英文字或數字）",
+        html: `<b>密碼格式不符合要求 </b><br><b>（必須是介於6~12碼的，大小寫英文字或數字）</b>`,
         confirmButtonText: "OK",
       });
       return;
@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
         Swal.fire({
           icon: "error",
           title: "錯誤",
-          text: "註冊失敗（信箱無法重複註冊）",
+          html: `<b>註冊失敗</b><br><b>（信箱無法重複註冊）</b>`,
           confirmButtonText: "OK",
         });
       }

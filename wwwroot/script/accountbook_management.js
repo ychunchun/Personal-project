@@ -13,13 +13,29 @@ function generateMemberTable(
   members.forEach(function (member) {
     const row = document.createElement("tr");
 
+    // 創建一個 <td> 元素來顯示使用者照片
+    const imageCell = document.createElement("td");
+    imageCell.className = "text-center";
+
+    // 創建一個 <img> 元素來顯示使用者照片
+    const profileImageElement = document.createElement("img");
+    profileImageElement.className = "img-circle elevation-2";
+    profileImageElement.alt = "User profile picture";
+    profileImageElement.style = "width:2.2rem !important;";
+    profileImageElement.src = member.image; // 使用成員的 profile_image 屬性
+    imageCell.appendChild(profileImageElement);
+
+    // 創建一個 <td> 元素來顯示使用者名稱
     const userNameCell = document.createElement("td");
     userNameCell.textContent = member.userName;
+    userNameCell.className = "text-center";
 
     const roleCell = document.createElement("td");
     roleCell.textContent = member.role;
     roleCell.className = "text-center";
 
+    // 將以上 <td> 元素添加到表格行中
+    row.appendChild(imageCell);
     row.appendChild(userNameCell);
     row.appendChild(roleCell);
 
@@ -32,7 +48,7 @@ function generateMemberTable(
     ) {
       const deleteButton2 = document.createElement("button");
       deleteButton2.className =
-        "btn btn-danger btn-sm delete-member-button text-center";
+        "btn btn-danger btn-sm delete-member-button text-center!important;";
       deleteButton2.setAttribute("data-memberid", member.memberId);
       deleteButton2.innerHTML = '<i class="fas fa-trash" id="trash-icon"></i>';
       deleteIconCell.appendChild(deleteButton2);
@@ -79,10 +95,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         accountBookCard.innerHTML = `
           <div class="card-header card-outline card-info">
-            <b>
+            <b class="money-info">
               <h3 class="card-title">${accountBook.accountBookName}</h3>
               <br>
-              <h3 class="card-title">NT$ ${accountBook.profit}</h3>
+              <h3 class="card-title">帳本餘額 NT$ ${accountBook.profit}</h3>
             </b>
             <div class="card-tools">
               ${
@@ -130,9 +146,10 @@ document.addEventListener("DOMContentLoaded", function () {
             <table class="table">
               <thead>
                 <tr>
-                  <th style="width: 20%">成員</th>
+                  <th style="width: 8%" class="text-center"></th>
+                  <th style="width: 12%" class="text-center">成員</th>
                   <th style="width: 8%" class="text-center">角色</th>
-                  <th style="width: 20%" class="text-center"></th>
+                  <th style="width: 8%" class="text-center"></th>
                 </tr>
               </thead>
               <!-- 將生成的成員表放到這裡 -->
@@ -151,6 +168,26 @@ document.addEventListener("DOMContentLoaded", function () {
         `;
 
         MemberContainer.appendChild(accountBookCard);
+
+        //點擊帳本card-header顯示詳細資訊
+        const accountBookInfo = accountBookCard.querySelector(".money-info");
+        accountBookInfo.addEventListener("mouseenter", () => {
+          accountBookInfo.style.cursor = "pointer";
+        });
+        if (accountBookInfo) {
+          accountBookInfo.addEventListener("click", () => {
+            Swal.fire({
+              title: "帳本詳細資訊",
+              html: `
+              <b>帳本初始金額: NT$ ${accountBook.initialBalance}</b><br>
+              <b>總收入: NT$ ${accountBook.income}</b><br>
+              <b>總支出: NT$ ${accountBook.expenses}</b><br>
+            `,
+              icon: "info",
+              confirmButtonText: "Close",
+            });
+          });
+        }
 
         // 刪除帳本按鈕點監聽
         const deleteButton = accountBookCard.querySelector(".btn-danger");
@@ -173,11 +210,6 @@ document.addEventListener("DOMContentLoaded", function () {
       totalProfitSpan.textContent = totalProfit;
 
       //刪除成員按鈕的監聽
-      // document.addEventListener("click", handleDeleteButtonClickMember);
-      // document
-      //   .getElementById("trash-icon")
-      //   .addEventListener("click", handleDeleteButtonClickMember);
-      // deleteButton2.addEventListener("click", handleDeleteButtonClickMember);
       document
         .querySelector(".delete-member-button")
         .addEventListener("click", handleDeleteButtonClickMember);
@@ -189,7 +221,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 //刪除成員按鈕的觸發行為
 async function handleDeleteButtonClickMember() {
-  console.log("Delete button clicked");
   // const memberId1 = event.target.getAttribute("data-memberid");
   // console.log("1", memberId1);
   // const memberId3 = event.target.this("data-memberid");
@@ -282,8 +313,8 @@ async function handleInviteButtonClick(event, accountBookId) {
     if (response.ok) {
       const data = await response.json();
       const accessToken = data.accountBookToken;
-      const completeLink = `http://localhost:5158/admin/login.html?token=${accessToken}`;
-      //const completeLink = `https://yuchunchun.online/admin/login.html?token=${accessToken}`;
+      const completeLink = `http://localhost:5158/admin/index.html?token=${accessToken}`;
+      //const completeLink = `https://yuchunchun.online/admin/index.html?token=${accessToken}`;
 
       // 複製網址到剪貼板
       await navigator.clipboard.writeText(completeLink);

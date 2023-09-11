@@ -41,6 +41,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         // 觸發帳本選擇，以追蹤使用者選擇
         accountNameSelect.dispatchEvent(new Event("change"));
       }
+      handleCategoryTypeChange();
     } catch (error) {
       console.error("Error fetching account books:", error);
     }
@@ -50,17 +51,18 @@ document.addEventListener("DOMContentLoaded", async function () {
   accountNameSelect.addEventListener("change", (event) => {
     const selectedAccountId = event.target.value;
     console.log("Selected Account Book ID:", selectedAccountId);
+    handleCategoryTypeChange();
   });
 
   fetchAccountBooks();
 
   //////////////針對category_type的選擇，給出相對應的category_name的下拉選單/////////////
-  categoryTypeSelect.addEventListener("change", async function () {
+  async function handleCategoryTypeChange() {
     const selectedCategoryType = categoryTypeSelect.value;
     const selectedAccountBookId = accountNameSelect.value;
-    const selectedAccountBookOption = accountNameSelect.querySelector(
-      `[value="${selectedAccountBookId}"]`
-    );
+    // const selectedAccountBookOption = accountNameSelect.querySelector(
+    //   `[value="${selectedAccountBookId}"]`
+    // );
 
     try {
       const response = await fetch(
@@ -87,7 +89,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     } catch (error) {
       console.error("Error fetching categories:", error);
     }
-  });
+  }
+  handleCategoryTypeChange();
+  // 之後使用監聽追蹤user的選擇
+  categoryTypeSelect.addEventListener("change", handleCategoryTypeChange);
 
   let user_id; // 宣告成全域變數，讓後面的寫入也可以使用
   try {

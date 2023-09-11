@@ -13,8 +13,9 @@ using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
+using SixLabors.ImageSharp.Formats.Jpeg;
 
-namespace YourProject.Controllers
+namespace Personal_project.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -46,7 +47,7 @@ namespace YourProject.Controllers
                     email = input.email,
                     password = HashPassword(input.password),
                     provider = "native",
-                    // picture = "https://example.com/path/to/picture.png"
+                    profile_image="/Images/user6-128x128.jpg"
                 };
 
                 _dbcontext.Users.Add(user);
@@ -198,7 +199,7 @@ namespace YourProject.Controllers
         }
                
            
-
+//////////////使用者資訊////////////
         [Authorize] //經過驗證的user
         [HttpGet("userprofile")]
         
@@ -224,13 +225,76 @@ namespace YourProject.Controllers
                     provider = user.provider,
                     name = user.user_name,
                     email = user.email,
-                    // picture = user.picture
+                    picture = user.profile_image
                 }
             };
 
             return Ok(response);
         }
 
+
+////////////////上傳照片////////////////
+        [Authorize]
+        [HttpPost("UploadImage")]
+        public async Task<IActionResult> UploadImage([FromForm] IFormFile profile_image){
+
+            var identity = HttpContext.User.Identity as ClaimsIdentity; //HttpContext.User.Identity 屬性取得使用者的身份資訊，ClaimsIdentity 代表使用者的身份識別
+            var emailClaim = identity.FindFirst(ClaimTypes.Email); 
+            var email = emailClaim.Value; //emailClaim是物件, email是字串變數
+
+            // 根據 email 從資料庫中尋找使用者
+            var user = _dbcontext.Users.SingleOrDefault(u => u.email == email);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            if(profile_image!=null && profile_image.Length>0){
+
+                // 檢查上傳的圖片大小，例如限制為 5MB
+                long maxFileSize = 5 * 1024 * 1024; 
+                if (profile_image.Length > maxFileSize)
+                {
+                    return BadRequest("上傳的圖片太大，請選擇較小的圖片。");
+                }
+
+                //目標資料夾
+                string targetFolderPath = @"./wwwroot/Images/";
+
+                //生成獨立檔名
+                var uniqueFileName = Guid.NewGuid().ToString()+ "_"+ profile_image.FileName;
+
+                var filePath=Path.Combine(targetFolderPath, uniqueFileName);
+
+                //圖片檔案寫入資料夾‘
+                using(var stream =new FileStream(filePath, FileMode.Create)){
+                    await profile_image.CopyToAsync(stream);
+                }
+
+                // 調整圖片大小到 120x120 像素
+                using (var image = Image.Load(filePath))
+                {
+                    image.Mutate(x => x.Resize(new ResizeOptions
+                    {
+                        Size = new Size(120, 120),
+                        Mode = ResizeMode.Crop // 裁剪以確保 120x120 的大小
+                        //Mode = ResizeMode.Max // 調整大小時保持比例
+                    }));
+
+                    // 儲存調整大小後的圖片
+                    image.Save(filePath, new JpegEncoder());
+                }
+
+                //  存到Users table
+                user.profile_image= "/Images/"+uniqueFileName;
+                _dbcontext.Users.Update(user);
+                _dbcontext.SaveChanges();
+
+                return Ok(new { FilePath = "/Images/" + uniqueFileName });
+            }
+            return BadRequest();
+
+        }
 
         private string GenerateAccessToken(string email)
         {
