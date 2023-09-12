@@ -190,12 +190,14 @@ namespace Personal_project.Controllers
                     return NotFound();
                 }
 
+                var currentDate = DateTime.Now;
+                var dateOnly = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 0, 0, 0, 0);
                 //新增到History table
                  var newHistory = new History
                 {
                     transaction_id = input.transactionId,
                     operation_type = "修改",
-                    operation_date = DateTime.Now, // 修改時的操作日期
+                    operation_date = dateOnly, // 修改時的操作日期
                     user_name = user.user_name,
                     user_id = user.user_id,
                     account_book_id = input.accountbookId,
@@ -216,25 +218,7 @@ namespace Personal_project.Controllers
             }
         }
 
-        // 同步新增至 History 表格
-        private async Task AddToHistory(Transactions transaction)
-        {
-            var newHistory = new History
-            {
-                transaction_id = transaction.transaction_id,
-                operation_type = "修改",
-                operation_date = DateTime.Now, // 修改時的操作日期
-                user_name = transaction.user.user_name,
-                user_id = transaction.user_id,
-                account_book_id = transaction.account_book_id,
-                amount = transaction.amount,
-                category_name = transaction.category_and_account.category.category_name,
-                category_type = transaction.category_and_account.category.category_type,
-            };
 
-            _dbcontext.History.Add(newHistory);
-            await _dbcontext.SaveChangesAsync();
-        }
 
         // // 同步新增至 Notifications 表格
         // private async Task AddToNotifications(Transactions transaction)

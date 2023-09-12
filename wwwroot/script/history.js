@@ -129,10 +129,17 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
       const notifications = await response.json();
 
-      // 時間近到遠排序
-      notifications.sort((a, b) => new Date(b.date) - new Date(a.date));
       // // 只顯示20筆
       // const latestNotifications = notifications.slice(0, 20);
+
+      // 先排序日期，但如果日期相同，比較historyId
+      notifications.sort((a, b) => {
+        const dateComparison = new Date(b.date) - new Date(a.date);
+        if (dateComparison === 0) {
+          return b.historyId - a.historyId;
+        }
+        return dateComparison;
+      });
 
       const tableBody = document.getElementById("transactionTableBody");
       tableBody.innerHTML = ""; // 清空表格内容
@@ -152,16 +159,9 @@ document.addEventListener("DOMContentLoaded", async function () {
             notification.transaction_id
           );
 
-          // 將日期格式轉換為正確格式（MM/dd）
-          const rawDateParts = notification.date.split("/");
-          const formattedDate = `${rawDateParts[0].padStart(
-            2,
-            "0"
-          )}/${rawDateParts[1].padStart(2, "0")}`;
-
           newRow.innerHTML = `
         <td>${index + 1}</td>
-        <td>${formattedDate}</td>
+        <td>${notification.date}</td>
         <td>${notification.categoryName}</td>
         <td>${notification.operationType}</td>
         <td>${notification.amount}</td>

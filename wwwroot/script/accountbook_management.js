@@ -313,8 +313,8 @@ async function handleInviteButtonClick(event, accountBookId) {
     if (response.ok) {
       const data = await response.json();
       const accessToken = data.accountBookToken;
-      const completeLink = `http://localhost:5158/admin/index.html?token=${accessToken}`;
-      //const completeLink = `https://yuchunchun.online/admin/index.html?token=${accessToken}`;
+      //const completeLink = `http://localhost:5158/admin/index.html?token=${accessToken}`;
+      const completeLink = `https://yuchunchun.online/admin/index.html?token=${accessToken}`;
 
       // 複製網址到剪貼板
       await navigator.clipboard.writeText(completeLink);

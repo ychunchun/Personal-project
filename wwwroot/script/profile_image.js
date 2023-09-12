@@ -35,6 +35,8 @@ async function handleImageUpload(event) {
       // 更新前端照片，並顯示
       const ImageElement = document.getElementById("User profile picture");
       ImageElement.src = data.filePath;
+      const imageElement = document.getElementById("User Image");
+      imageElement.src = data.filePath;
       Swal.fire("上傳成功", "您的圖片已成功更換！", "success");
     } else {
       Swal.fire("上傳失敗", "請再試一次。", "error");

@@ -40,12 +40,13 @@ namespace Personal_project.Controllers
                 {
                     TransactionId = h.transaction_id,
                     OperationType = h.operation_type,
-                    Date = h.operation_date.HasValue ? h.operation_date.Value.ToString("MM/dd") : "",
+                    Date = h.operation_date.HasValue ? h.operation_date.Value.ToString("yyyy/MM/dd") : "",
                     UserName = h.user_name,
                     CategoryName = h.category_name,
                     CategoryType = h.category_type,
                     Amount = h.amount,
-                    AccountBookId = h.account_book_id
+                    AccountBookId = h.account_book_id,
+                    HistoryId=h.history_id
                 })
                 .ToListAsync();
 
