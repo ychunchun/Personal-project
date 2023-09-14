@@ -21,7 +21,7 @@ function generateMemberTable(
     const profileImageElement = document.createElement("img");
     profileImageElement.className = "img-circle elevation-2";
     profileImageElement.alt = "User profile picture";
-    profileImageElement.style = "width:2.2rem !important;";
+    profileImageElement.style = "width:2.7rem !important;";
     profileImageElement.src = member.image; // 使用成員的 profile_image 屬性
     imageCell.appendChild(profileImageElement);
 
@@ -210,9 +210,10 @@ document.addEventListener("DOMContentLoaded", function () {
       totalProfitSpan.textContent = totalProfit;
 
       //刪除成員按鈕的監聽
-      document
-        .querySelector(".delete-member-button")
-        .addEventListener("click", handleDeleteButtonClickMember);
+      const deleteButtons = document.querySelectorAll(".delete-member-button");
+      deleteButtons.forEach((button) => {
+        button.addEventListener("click", handleDeleteButtonClickMember);
+      });
     })
     .catch((error) => {
       console.error("錯誤：無法獲取數據。", error);

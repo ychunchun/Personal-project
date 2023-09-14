@@ -94,7 +94,7 @@ namespace Personal_project.Controllers
                 await _dbcontext.SaveChangesAsync();
 
 
-                // // 獲取帳本成員人數
+                // // 獲取帳本成員人數（原先要做的功能，依照帳本成員數量發送相對應的通知信。但後來發現，必須要有及時通知，此功能才會較直覺有用）
                 // var membersIds = await _dbcontext.Members
                 //     .Where(m => m.account_book_id == newTransactions.account_book_id)
                 //     .Select(m => m.user_id)
