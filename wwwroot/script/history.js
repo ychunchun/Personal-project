@@ -1,115 +1,197 @@
-const accountNameSelect = document.getElementById("accountName");
-let accountBookMap = {}; //map accountbookname, accountbookid
-///////////////下拉選單給user選accountbook///////////////////////
-// 發送 API 請求以獲取帳簿數據
-async function fetchAccountBooks() {
-  try {
-    const response = await fetch("/api/AccountBook/GetAccountBook", {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("access_token"), // 添加 JWT Token
-      },
-    });
+document.addEventListener("DOMContentLoaded", async function () {
+  const accountNameSelect = document.getElementById("accountName");
+  const memberSelect = document.getElementById("memberName");
 
-    if (!response.ok) {
-      throw new Error("API request failed");
+  const apiUrl = "/api/AccountBook/GetAccountBook";
+  let accountBooks = [];
+
+  //根據選擇的帳本填充member，並根據帳本類型判斷是否要加入"所有成員"的選項
+  async function populateMemberDropdown(selectedAccountBook) {
+    memberSelect.innerHTML = "";
+
+    if (selectedAccountBook.accountBookType !== "main") {
+      const allMembersOption = document.createElement("option");
+      allMembersOption.textContent = "所有成員";
+      allMembersOption.value = "";
+      memberSelect.appendChild(allMembersOption);
     }
 
-    const data = await response.json();
-    const accountBooks = data.accountBooks;
-
-    //Main帳本排序第一
-    accountBooks.sort((a, b) => {
-      if (a.accountBookName === "Main" && b.accountBookName !== "Main") {
-        return -1;
-      }
-      if (a.accountBookName !== "Main" && b.accountBookName === "Main") {
-        return 1;
-      }
-      return 0;
-    });
-
-    accountBooks.forEach((accountBook) => {
+    selectedAccountBook.members.forEach((member) => {
       const option = document.createElement("option");
-      option.textContent = accountBook.accountBookName;
-      option.value = accountBook.accountBookName;
-      accountNameSelect.appendChild(option);
-
-      //因為下拉選單是Name，所以需要一個陣列來Map
-      accountBookMap[accountBook.accountBookName] = accountBook.accountBookId;
+      option.textContent = member.userName;
+      option.value = member.userName;
+      memberSelect.appendChild(option);
     });
-
-    // 下拉選單新增監聽 selectedAccountBookName
-    accountNameSelect.addEventListener("change", function () {
-      selectedAccountBookName = accountNameSelect.value;
-      const accountBookId = accountBookMap[selectedAccountBookName];
-
-      // 清空通知容器
-      const container = document.getElementById("notificationContainer");
-      container.innerHTML = "";
-
-      fetchAndDisplayNotifications(accountBookId);
-    });
-    // 取得下拉選單的第一個選項的值（帳簿名稱）
-    const defaultAccountBookName = accountNameSelect.options[0].value;
-    const defaultAccountBookId = accountBookMap[defaultAccountBookName];
-
-    // 將第一個選項設定為預設選擇
-    accountNameSelect.value = defaultAccountBookName;
-    accountNameSelect.dispatchEvent(new Event("change")); // 觸發 change 事件
-  } catch (error) {
-    console.error("Error fetching account books:", error);
   }
-}
 
-fetchAccountBooks();
-
-async function fetchAndDisplayNotifications(accountBookId) {
-  try {
-    const accessToken = localStorage.getItem("access_token");
-    const response = await fetch(
-      `/api/history/Gethistory?AccountBookId=${accountBookId}`,
-      {
+  //獲取帳本數據，並填充下拉選單。同時設置預設值
+  async function fetchAccountBooks() {
+    try {
+      const response = await fetch(apiUrl, {
         method: "GET",
         headers: {
-          Authorization: "Bearer " + accessToken,
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
         },
+      });
+
+      if (!response.ok) {
+        throw new Error("API request failed");
       }
-    );
 
-    if (!response.ok) {
-      throw new Error("API request failed");
+      const data = await response.json();
+      accountBooks = data.accountBooks;
+
+      accountBooks.forEach((accountBook) => {
+        const option = document.createElement("option");
+        option.textContent = accountBook.accountBookName;
+        accountNameSelect.appendChild(option);
+      });
+
+      const firstAccountBook = accountBooks[0];
+
+      if (firstAccountBook.accountBookType === "main") {
+        //populateMemberDropdown(firstAccountBook);
+        // 設定預設值
+        memberSelect.value = firstAccountBook.members[0].userId;
+      } else {
+        // 如果第一個帳本的類型不是 "main"，設置第二個下拉選單（成員選擇框）的預設值為第一個成員的 userId
+        memberSelect.value = ""; // 所有成員
+      }
+
+      populateMemberDropdown(firstAccountBook);
+
+      //根據帳本選擇不同，給予不同的值
+      accountNameSelect.addEventListener("change", async function () {
+        const selectedAccountBookName = accountNameSelect.value;
+        const selectedAccountBook = accountBooks.find(
+          (accountBook) =>
+            accountBook.accountBookName === selectedAccountBookName
+        );
+
+        if (selectedAccountBook) {
+          populateMemberDropdown(selectedAccountBook);
+        }
+      });
+      fetchTransactionsIfNeeded();
+    } catch (error) {
+      console.error("Error fetching account books:", error);
     }
-    const notifications = await response.json();
-
-    // 時間近到遠排序
-    notifications.sort(
-      (a, b) => new Date(b.currentTime) - new Date(a.currentTime)
-    );
-    // 只顯示20筆
-    const latestNotifications = notifications.slice(0, 20);
-
-    const container = document.getElementById("notificationContainer");
-
-    latestNotifications.forEach((notification) => {
-      const listItem = document.createElement("li");
-      listItem.className =
-        "list-group-item d-flex justify-content-between align-items-center";
-      const notificationText = `${notification.date} ${notification.userName} ${notification.operationType} a ${notification.categoryType} : ${notification.categoryName} $${notification.amount} `;
-
-      const notificationSpan = document.createElement("span");
-      notificationSpan.textContent = notificationText;
-
-      listItem.appendChild(notificationSpan);
-
-      // 將list加到通知container
-      container.appendChild(listItem);
-    });
-  } catch (error) {
-    console.error("Error fetching and displaying notifications:", error);
-    const container = document.getElementById("notificationContainer");
-    container.innerHTML = "No history available for selected account book!";
   }
-}
 
-fetchAndDisplayNotifications();
+  //根據當前選中的參數獲取數據，用於變動選擇時可以獲取最新數據
+  function fetchTransactionsIfNeeded() {
+    const selectedAccountBookName = accountNameSelect.value;
+    const selectedMemberOption =
+      memberSelect.options[memberSelect.selectedIndex];
+    const selectedMemberValue = selectedMemberOption.value;
+
+    // 找到選擇的帳簿對應的 accountBookId 和 userName
+    const selectedAccountBook = accountBooks.find(
+      (accountBook) => accountBook.accountBookName === selectedAccountBookName
+    );
+
+    if (selectedAccountBook) {
+      const selectedAccountBookId = selectedAccountBook.accountBookId;
+
+      // 檢查選項的值是否為空（所有成員），如果是則回傳空值
+      if (selectedMemberValue === "") {
+        fetchTransactions(selectedAccountBookId, "");
+      } else {
+        // 檢查選項的文本是否包含 "(你)"，然後拆分以獲取用戶名
+        const selectedMemberText = selectedMemberOption.textContent;
+        const hasCurrentUserTag = selectedMemberText.includes("(你)");
+        const selectedUserName = hasCurrentUserTag
+          ? selectedMemberText.split(" ")[0]
+          : selectedMemberText;
+
+        fetchTransactions(selectedAccountBookId, selectedUserName);
+      }
+    }
+  }
+  await fetchAccountBooks();
+
+  ///////////////////////////////將篩選參數傳送到API/////////////////////////
+  async function fetchTransactions(accountBookId, userName) {
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      const response = await fetch(
+        `/api/history/Gethistory?AccountBookId=${accountBookId}&UserName=${userName}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + accessToken,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("API request failed");
+      }
+      const notifications = await response.json();
+
+      // // 只顯示20筆
+      // const latestNotifications = notifications.slice(0, 20);
+
+      // 先排序日期，但如果日期相同，比較historyId
+      notifications.sort((a, b) => {
+        const dateComparison = new Date(b.date) - new Date(a.date);
+        if (dateComparison === 0) {
+          return b.historyId - a.historyId;
+        }
+        return dateComparison;
+      });
+
+      const tableBody = document.getElementById("transactionTableBody");
+      tableBody.innerHTML = ""; // 清空表格内容
+
+      if (notifications.length === 0) {
+        //回傳值為空的，會跳出錯誤
+        const noDataMessage = document.createElement("tr");
+        noDataMessage.innerHTML = `
+      <td colspan="5">查找範圍無對應數據</td>
+    `;
+        tableBody.appendChild(noDataMessage);
+      } else {
+        notifications.forEach((notification, index) => {
+          const newRow = document.createElement("tr");
+          newRow.setAttribute(
+            "data-transaction-id",
+            notification.transaction_id
+          );
+
+          newRow.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${notification.date}</td>
+        <td>${notification.categoryName}</td>
+        <td>${notification.operationType}</td>
+        <td>${notification.amount}</td>
+        <td>${notification.userName}</td>
+      `;
+          //newRow.style.cursor = "pointer"; // 變鼠標
+          tableBody.appendChild(newRow);
+        });
+      }
+    } catch (error) {
+      //查詢值不正確或是DB連線時，會出現的錯誤
+      console.error("Error fetching:", error);
+
+      const tableBody = document.getElementById("transactionTableBody");
+      tableBody.innerHTML = ""; // 清空表格內容
+
+      const noDataMessage = document.createElement("tr");
+      noDataMessage.innerHTML = `
+      <td colspan="5">查找範圍無對應數據</td>
+    `;
+      tableBody.appendChild(noDataMessage);
+    }
+  }
+
+  // 在帳本名稱和成員選擇變更時觸發更新交易記錄
+  accountNameSelect.addEventListener("change", function () {
+    fetchTransactionsIfNeeded();
+  });
+
+  memberSelect.addEventListener("change", function () {
+    fetchTransactionsIfNeeded();
+  });
+});

@@ -5,6 +5,8 @@ public class AccountBookDTO
     public string AccountBookType { get; set; }
     public int? InitialBalance { get; set; }
     public int? Profit { get; set; }
+    public int? Expenses { get; set; }
+    public int? Income { get; set; }
     public int? AdminUser { get; set; }
     public List<MemberRoleAndUserNameDTO> Members { get; set; }
 }
@@ -12,7 +14,7 @@ public class AccountBookDTO
 public class AccountBookAddDTO
 {
     public string AccountBookName { get; set; }
-    public int? InitialBalance { get; set; }
+    public int InitialBalance { get; set; }
 }
 
 public class AccountBookStatusDTO
@@ -25,4 +27,13 @@ public class MemberRoleAndUserNameDTO
     public string Role { get; set; } 
     public string UserName { get; set; } 
     public int MemberId { get; set; }
+    public int? UserId{get;set;}
+    public string Image { get; set; } 
+}
+
+public class AccountBookUpdateDto
+{
+    public int AccountBookId { get; set; }
+    public string  AccountBookName{ get; set; }
+    public int InitialBalance { get; set; }
 }

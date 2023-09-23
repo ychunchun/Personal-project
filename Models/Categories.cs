@@ -11,5 +11,7 @@ public partial class Categories
 
     public string? category_type { get; set; }
 
+    public virtual ICollection<CategoryAndAccount> CategoryAndAccount { get; set; } = new List<CategoryAndAccount>();
+
     public virtual ICollection<Transactions> Transactions { get; set; } = new List<Transactions>();
 }

@@ -2,7 +2,7 @@
   <head>
     <meta charset="UTF-8" />
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
-    <title>Add Transaction</title>
+    <title>Modify Transaction</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.7/dist/sweetalert2.min.css"
@@ -34,25 +34,28 @@
           </li>
         </ul>
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item dropdown">
-            <!-- <a href="/admin/notification.html">
+          <!-- <li class="nav-item dropdown">
+            <a href="/admin/notification.html">
               <i class="far fa-bell "></i>
-            </a> -->
+              <p id="bell"></p>
+              <li class="nav-item me-3 me-lg-0">
+                <div class="dropdown">
+                    <a class="nav-link link-white me-3  hidden-arrow" data-bs-toggle="dropdown" href="#" id="navbarDropdownMenuLink" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-envelope-open"></i>
+                        <span id="notificationBadge" class="badge rounded-pill badge-notification bg-danger"></span>
+                    </a>
+                     <ul id="dropdownMenu" class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                    </ul>
+                </div>
+            </li>
+            </a>
+          </li> -->
+          <li class="nav-item dropdown">
             <div id="logout">
               <i class="fas fa-sign-out-alt" >登出</i>
             </div>
           </li>
-          <!-- <li class="nav-item me-3 me-lg-0">
-            <div class="dropdown">
-              <a class="nav-link link-white me-3  hidden-arrow" data-bs-toggle="dropdown" href="#" id="navbarDropdownMenuLink" role="button"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-envelope-open"></i>
-                <span id="notificationBadge" class="badge rounded-pill badge-notification bg-danger"></span>
-              </a>
-              <ul id="dropdownMenu" class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-              </ul>
-            </div>
-          </li> -->
         </ul>
       </nav>
 
@@ -62,7 +65,7 @@
         <div class="container">
           <div class="card card-primary card-outline card-info">
             <div class="card-header">
-                <h3><b>新增帳目</b></h3>
+                <h3><b>修改帳目</b></h3>
             </div>
             <div class="card-body box-profile">             
                 <ul class="list-group list-group-unbordered mb-3">
@@ -87,7 +90,7 @@
                           <div class="form-group row">
                             <label for="inputEmail3" class="col-sm-2 col-form-label">金額</label>
                               <div class="col-sm-10">
-                                <input type="number" class="form-control" id="amount" name="amount" placeholder="TWD" required title="請填寫金額" min="0" max="999999999">
+                                <input type="number" class="form-control" id="amount" name="amount" min="0" max="999999999" required placeholder="TWD">
                               </div>
                           </div> 
                           <div class="form-group row">
@@ -105,21 +108,21 @@
                                   id="transaction-date"
                                   name="transaction_date"
                                   required
-                                  title="請填寫日期"
                                 />
                               </div>
                           </div> 
                           <div class="form-group row">
                             <label for="inputEmail3" class="col-sm-2 col-form-label">詳細記錄</label>
                               <div class="col-sm-10">
-                                <input type="initialbalance" class="form-control" id="details" placeholder="填入更詳細的金額說明" required title="請填寫紀錄">
+                                <input type="initialbalance" class="form-control" id="details" placeholder="填入更詳細的金額說明">
                               </div>
                           </div>                            
                         </div>
                     </li>
                 </ul>
-                  <button type="submit" class="btn btn-info btn-block delete-button" style="background-color:#e6e1c5; color:#505962; border-color: #505962 !important;"><b>新增</b></ㄖ>
-              </form>
+                  <!-- <a href="/admin/home.html" class="btn btn-info btn-block delete-button" style="background-color:#e6e1c5; color:#505962; border-color: #505962 !important;"><b>修改</b></a> -->
+                  <button class="btn btn-info btn-block delete-button" style="background-color:#e6e1c5; color:#505962; border-color: #505962 !important;"><b>修改</b></button>
+                </form>
             </div>
         </div>
 
@@ -135,7 +138,7 @@
         <img src="../Adminlte/dist/img/projectLogo.png" alt="Project Logo" class="custom-image">
       </a>
 
-        <!-- Sidebar -->
+      <!-- Sidebar -->
       <div class="sidebar">
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
@@ -191,11 +194,11 @@
        <!-- AdminLTE App -->
        <script src="../Adminlte/dist/js/adminlte.js"></script>
        <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.11/signalr.min.js"></script>
-       <script src="/script/signalR.js"></script>
-       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>     
-       <script src="/script/token_validation.js"></script>
-       <script src="/script/user_bar_name.js"></script>
-       <script src="/script/add_transaction.js"></script>          
+      <script src="/script/signalR.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+      <script src="/script/token_validation.js"></script>
+      <script src="/script/user_bar_name.js"></script>
+      <script src="/script/modify_transaction.js"></script>
     </div>
   </body>
 </html>

@@ -12,9 +12,44 @@ document.addEventListener("DOMContentLoaded", function () {
   registerButton.addEventListener("click", async function (event) {
     event.preventDefault(); // 阻止表單的預設提交行為
 
-    const fullName = document.querySelector('[placeholder="Full name"]').value;
-    const email = document.querySelector('[placeholder="Email"]').value;
-    const password = document.querySelector('[placeholder="Password"]').value;
+    const fullName = document.querySelector('[placeholder="名字"]').value;
+    const email = document.querySelector('[placeholder="信箱"]').value;
+    const password = document.querySelector('[placeholder="密碼"]').value;
+
+    // 表单验证逻辑
+    const namePattern = /^[A-Za-z\u4e00-\u9fa5]+$/;
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    const passwordPattern = /^[A-Za-z0-9]+$/;
+
+    if (!namePattern.test(fullName)) {
+      Swal.fire({
+        icon: "error",
+        title: "錯誤",
+        html: `<b>名字格式不符合要求</b><br><b>(只能是長度15碼以內的中英文字)</b>`,
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+
+    if (!emailPattern.test(email)) {
+      Swal.fire({
+        icon: "error",
+        title: "錯誤",
+        html: `<b>信箱格式不符合要求</b><br><b>（例如：user@example.com）</b>`,
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+
+    if (!passwordPattern.test(password)) {
+      Swal.fire({
+        icon: "error",
+        title: "錯誤",
+        html: `<b>密碼格式不符合要求 </b><br><b>（必須是介於6~12碼的，大小寫英文字或數字）</b>`,
+        confirmButtonText: "OK",
+      });
+      return;
+    }
 
     const userData = {
       user_name: fullName,
@@ -35,8 +70,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const responseData = await response.json();
         Swal.fire({
           icon: "success",
-          title: "Success!",
-          text: "User has been registered successfully.",
+          title: "成功!",
+          text: "註冊成功",
           confirmButtonText: "OK",
         }).then(() => {
           // 跳轉到顯示登入畫面
@@ -46,8 +81,8 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         Swal.fire({
           icon: "error",
-          title: "Error!",
-          text: "Failed to register user.",
+          title: "錯誤",
+          html: `<b>註冊失敗</b><br><b>（信箱無法重複註冊）</b>`,
           confirmButtonText: "OK",
         });
       }

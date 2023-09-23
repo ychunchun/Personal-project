@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Show Me the Money | Registration Page</title>
+    <title>Register</title>
 
     <link
       rel="stylesheet"
@@ -32,82 +32,6 @@
       rel="stylesheet"
       href="../Adminlte/dist/css/adminlte.min.css?v=3.2.0"
     />
-    <script nonce="9772013d-f3ee-4644-9a2d-3c1e1efdff45">
-      (function (w, d) {
-        !(function (j, k, l, m) {
-          j[l] = j[l] || {};
-          j[l].executed = [];
-          j.zaraz = {
-            deferred: [],
-            listeners: [],
-          };
-          j.zaraz.q = [];
-          j.zaraz._f = function (n) {
-            return async function () {
-              var o = Array.prototype.slice.call(arguments);
-              j.zaraz.q.push({
-                m: n,
-                a: o,
-              });
-            };
-          };
-          for (const p of ["track", "set", "debug"]) j.zaraz[p] = j.zaraz._f(p);
-          j.zaraz.init = () => {
-            var q = k.getElementsByTagName(m)[0],
-              r = k.createElement(m),
-              s = k.getElementsByTagName("title")[0];
-            s && (j[l].t = k.getElementsByTagName("title")[0].text);
-            j[l].x = Math.random();
-            j[l].w = j.screen.width;
-            j[l].h = j.screen.height;
-            j[l].j = j.innerHeight;
-            j[l].e = j.innerWidth;
-            j[l].l = j.location.href;
-            j[l].r = k.referrer;
-            j[l].k = j.screen.colorDepth;
-            j[l].n = k.characterSet;
-            j[l].o = new Date().getTimezoneOffset();
-            if (j.dataLayer)
-              for (const w of Object.entries(
-                Object.entries(dataLayer).reduce(
-                  (x, y) => ({
-                    ...x[1],
-                    ...y[1],
-                  }),
-                  {}
-                )
-              ))
-                zaraz.set(w[0], w[1], {
-                  scope: "page",
-                });
-            j[l].q = [];
-            for (; j.zaraz.q.length; ) {
-              const z = j.zaraz.q.shift();
-              j[l].q.push(z);
-            }
-            r.defer = !0;
-            for (const A of [localStorage, sessionStorage])
-              Object.keys(A || {})
-                .filter((C) => C.startsWith("_zaraz_"))
-                .forEach((B) => {
-                  try {
-                    j[l]["z_" + B.slice(7)] = JSON.parse(A.getItem(B));
-                  } catch {
-                    j[l]["z_" + B.slice(7)] = A.getItem(B);
-                  }
-                });
-            r.referrerPolicy = "origin";
-            r.src =
-              "/cdn-cgi/zaraz/s.js?z=" +
-              btoa(encodeURIComponent(JSON.stringify(j[l])));
-            q.parentNode.insertBefore(r, q);
-          };
-          ["complete", "interactive"].includes(k.readyState)
-            ? zaraz.init()
-            : j.addEventListener("DOMContentLoaded", zaraz.init);
-        })(w, d, "zarazData", "script");
-      })(window, document);
-    </script>
   </head>
   <body class="hold-transition register-page">
     <div class="register-box">
@@ -118,10 +42,10 @@
       </div>
       <div class="card">
         <div class="card-body register-card-body">
-          <p class="login-box-msg">Register a new membership</p>
-          <form action="../Adminlte/index.html" method="post">
+          <p class="login-box-msg">註冊成為新會員</p>
+          <form novalidate onsubmit="return validateForm()">
             <div class="input-group mb-3">
-              <input type="text" class="form-control" placeholder="Full name" />
+              <input type="text" class="form-control" placeholder="名字" pattern="[A-Za-z\u4e00-\u9fa5]" maxlength="20" required/>
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span class="fas fa-user"></span>
@@ -129,7 +53,7 @@
               </div>
             </div>
             <div class="input-group mb-3">
-              <input type="email" class="form-control" placeholder="Email" />
+              <input type="email" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}" class="form-control" placeholder="信箱"required/>
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span class="fas fa-envelope"></span>
@@ -140,7 +64,11 @@
               <input
                 type="password"
                 class="form-control"
-                placeholder="Password"
+                placeholder="密碼"
+                pattern="[A-Za-z0-9]+"
+                minlength="6" 
+                maxlength="12" 
+                required
               />
               <div class="input-group-append">
                 <div class="input-group-text">
@@ -148,43 +76,19 @@
                 </div>
               </div>
             </div>
-            <!-- <div class="input-group mb-3">
-              <input
-                type="password"
-                class="form-control"
-                placeholder="Retype password"
-              />
-              <div class="input-group-append">
-                <div class="input-group-text">
-                  <span class="fas fa-lock"></span>
-                </div>
-              </div>
-            </div> -->
             <div class="row">
               <div class="col-8"></div>
 
               <div class="col-4">
                 <button type="submit" class="btn btn-info btn-block">
-                  Register
+                  註冊
                 </button>
               </div>
             </div>
           </form>
-          <!-- <div class="social-auth-links text-center">
-            <p>- OR -</p>
-            <a href="#" class="btn btn-block btn-primary">
-              <i class="fab fa-facebook mr-2"></i>
 
-              Sign up using Facebook
-            </a>
-            <a href="#" class="btn btn-block btn-danger">
-              <i class="fab fa-google-plus mr-2"></i>
-
-              Sign up using Google+
-            </a>
-          </div> -->
           <a href="login.html" class="text-center"
-            >I already have a membership</a
+            >我已經是會員了!</a
           >
         </div>
       </div>

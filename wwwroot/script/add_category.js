@@ -1,4 +1,8 @@
 document.addEventListener("DOMContentLoaded", async function () {
+  // 解析 URL 中的 transactionId 參數
+  const urlParams = new URLSearchParams(window.location.search);
+  const AccountBookId = urlParams.get("AccountBookId");
+
   const form = document.getElementById("categoryForm");
 
   form.addEventListener("submit", async function (event) {
@@ -10,6 +14,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const data = {
       category_type: categoryType,
       category_name: categoryName,
+      account_book_id: AccountBookId,
     };
 
     try {
@@ -25,12 +30,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         // 成功處理回應，顯示成功通知
         Swal.fire({
           icon: "success",
-          title: "Success!",
-          text: "Category has been added successfully.",
+          title: "成功",
+          text: "已成功新增類別",
           confirmButtonText: "OK",
         }).then(() => {
           // 跳轉到顯示類別畫面
-          window.location.href = "/admin/show_category.html";
+          window.location.href = `/admin/category_management.html?AccountBookId=${AccountBookId}`;
         });
         // 清空輸入字段
         form.category_name.value = "";
@@ -38,8 +43,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         // 處理錯誤回應，顯示錯誤通知
         Swal.fire({
           icon: "error",
-          title: "Error!",
-          text: "Failed to add category.",
+          title: "錯誤",
+          text: "類別新增失敗 (請檢查欄位格式且不得為空值)",
           confirmButtonText: "OK",
         });
       }

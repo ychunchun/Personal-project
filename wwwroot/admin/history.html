@@ -29,6 +29,7 @@
       rel="stylesheet"
       href="../Adminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css"
     />
+    <link rel="stylesheet" href="/styles/other.css">
   </head>
   <body>
     <div class="wapper">
@@ -46,10 +47,12 @@
         </ul>
         <ul class="navbar-nav ml-auto">
           <li class="nav-item dropdown">
-            <a href="/admin/notification.html">
+            <!-- <a href="/admin/notification.html">
               <i class="far fa-bell "></i>
-              <!-- <span class="badge badge-warning navbar-badge">15</span> -->
-            </a>
+            </a> -->
+            <div id="logout">
+              <i class="fas fa-sign-out-alt" >登出</i>
+            </div>
           </li>
         </ul>
       </nav>
@@ -67,21 +70,44 @@
         <section class="content">
             <div class="container">
                 <div class="card card-primary card-outline card-info">
-                    <div class="card-header">
-                        <h3><b>歷史編輯頁</b></h3><select id="accountName" name="account_book_name"></select>
-                    </div>
-                    <div class="card-body box-profile">                   
-                        <ul class="list-group list-group-unbordered mb-3">
+                  <div class="card-header">
+                    <h3><b>歷史編輯紀錄</b></h3>
+                  </div>
+                  <div class="card-body box-profile" style="height: 678px !important;">   
+                      <div class="card-body table-responsive p-0" style="height: 630px;">
+                        <table class="table table-head-fixed text-nowrap">
+                          <thead>
+                            <tr>
+                            <th>ID</th>
+                            <th>日期</th>
+                            <th>類型</th>
+                            <th>動作</th>
+                            <th>金額</th>
+                            <th>操作者</th>
+                            </tr>
+                          </thead>
+                          <tbody id="transactionTableBody">
+                            <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>                
+                        <!-- <ul class="list-group list-group-unbordered mb-3">
                           <li class="list-group-item list-group">
                           <div id="notificationContainer">
 
                           </div>
-                        </li>
+                        </li> -->
                               <!-- <ul class="list-group-item list-group"> -->
                                 <!-- Notifications will be displayed here -->
                               <!-- </ul> -->
                             
-                        </ul>
+                        <!-- </ul> -->
                     </div>
                 </div>
             </div>
@@ -91,12 +117,13 @@
 <!-- username operation_type a category_type :category_name $amount in account_book_name
 Kevin add a income :Lottery $ 80 in test -->
 
-      <!-- Main Sidebar Container -->
-      <aside class="main-sidebar sidebar-dark-primary elevation-4">
+       <!-- Main Sidebar Container -->
+      <aside class="main-sidebar sidebar-dark-primary elevation-4 " style="position:fixed; background-color:#242d35!important; overflow-y: clip!important">
         <!-- Brand Logo -->
-        <a href="index3.html" class="brand-link bg-cyan text-sm">
+        <a href="/admin/home.html" class="brand-link bg-cyan text-sm" style="background-color:#E6E1C5!important">
           <img src="../Adminlte/dist/img/weblogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-          <h5><span class="brand-text font-weight-light">Show Me the Money</span></h5>
+          <!-- <h5><span class="brand-text font-weight-light">Show Me the Money</span></h5> -->
+          <img src="../Adminlte/dist/img/projectLogo.png" alt="Project Logo" class="custom-image">
         </a>
 
         <!-- Sidebar -->
@@ -104,13 +131,12 @@ Kevin add a income :Lottery $ 80 in test -->
           <!-- Sidebar user panel (optional) -->
           <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-              <img src="../Adminlte/dist/img/user6-128x128.jpg" class="img-circle elevation-2" alt="User Image">
+              <img class="img-circle elevation-2" alt="User Image" id="User Image" style="width: 3rem !important;">
             </div>
             <div class="info">
-              <a href="#" class="d-block">michelin</a>
+              <a href="/admin/user_profile.html" class="d-block" id="username" style="font-size: 20px; margin-left:18px !important;"></a>
             </div>
           </div>
-
 
           <!-- Sidebar Menu -->
           <nav class="mt-2">
@@ -118,85 +144,39 @@ Kevin add a income :Lottery $ 80 in test -->
               <!-- Add icons to the links using the .nav-icon class
                   with font-awesome or any other icon font library -->
               <li class="nav-item">
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./index.html" class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Dashboard v1</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./index2.html" class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Dashboard v2</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./index3.html" class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Dashboard v3</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="/admin/account_book.html" class="nav-link">
-                  <i class="nav-icon fas fa-th"></i>
+                <a href="/admin/AccountBook Management.html" class="nav-link">
+                  <i class="nav-icon fas fa-book white-icon"></i>
                   <p>
-                    Account
+                    帳本管理
                   </p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/admin/chart.html" class="nav-link">
-                  <i class="nav-icon fas fa-chart-pie"></i>
+                <a href="/admin/history.html" class="nav-link">
+                  <i class="nav-icon fas fa-history white-icon"></i>
                   <p>
-                    Charts
+                    歷史編輯紀錄
                   </p>
                 </a>
               </li>
-            </li>            
-              <li class="nav-item">
-                <a href="/admin/add_category.html" class="nav-link">
-                  <i class="nav-icon fas fa-table"></i>
-                  <p>
-                    Categories
-                  </p>
-                </a>               
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon far fa-calendar-alt"></i>
-                  <p>
-                    History
-                  </p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="/admin/member.html" class="nav-link">
-                  <i class="nav-icon far fa-image"></i>
-                  <p>
-                    Members
-                  </p>
-                </a>
-              </li>
-              <!-- <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon far fa-envelope"></i>
-                  <p>
-                    Notifications
-                  </p>
-                </a>
-              </li> -->
-                
             </ul>
           </nav>
           <!-- /.sidebar-menu -->
         </div>
         <!-- /.sidebar -->
-      </aside>
-    </div>
-    </div>
-       <!-- jQuery -->
+        <hr class="custom-hr">
+        <div class="container">
+          <p class="custom-paragraph">過濾帳本及成員</p>
+          <div class="centered-div">
+            <select id="accountName" name="account_book_name" class="custom-select" style="margin-right: 63px !important;"></select>
+          </div>
+          <div class="centered-div">
+            <select id="memberName" name="member_name" class="custom-select" style="margin-right: 50px !important;"></select>
+          </div>
+      </div>
+      </div>
+    </aside>
+      <!-- jQuery -->
        <script src="../Adminlte/plugins/jquery/jquery.min.js"></script>
        <!-- jQuery UI 1.11.4 -->
        <script src="../Adminlte/plugins/jquery-ui/jquery-ui.min.js"></script>
@@ -211,8 +191,10 @@ Kevin add a income :Lottery $ 80 in test -->
        <!-- AdminLTE App -->
        <script src="../Adminlte/dist/js/adminlte.js"></script>
        <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.9/signalr.min.js"></script>
-      <script src="/script/history.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+       <script src="/script/token_validation.js"></script>
+       <script src="/script/history.js"></script>
+      <script src="/script/user_bar_name.js"></script>
     </div>
   </body>
 </html>

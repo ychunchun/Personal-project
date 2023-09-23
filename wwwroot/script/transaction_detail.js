@@ -13,41 +13,63 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
     );
 
+    // 找到 "修改" 按鈕元素，直接傳送包含transactionId的網址給button
+    const modifyButton = document.querySelector(".modify-button");
+
+    // 動態生成修改連結並設置 href 屬性
+    if (modifyButton) {
+      modifyButton.href = `/admin/modify_transaction.html?transactionId=${transactionId}`;
+    }
+
     ////////////////////delete api//////////////////
     const deleteButton = document.querySelector(".delete-button");
     deleteButton.addEventListener("click", async (event) => {
-      event.preventDefault(); //
-      console.log("Transaction ID:", transactionId);
-      const deleteResponse = await fetch(
-        `/api/transactions/TransactionStatus?transactionId=${transactionId}`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("access_token"),
-          },
-        }
-      );
+      event.preventDefault();
 
-      if (deleteResponse.ok) {
-        Swal.fire({
-          icon: "success",
-          title: "Success!",
-          text: "Transaction has been deleted successfully.",
-          confirmButtonText: "OK",
-        }).then(() => {
-          // 跳轉到顯示類別畫面
-          window.location.href = "/admin/home.html";
-          //如果按鈕被點擊，則傳遞訊息到AddTransaction Hub
-          console.log("Transaction deleted successfully");
-        });
-      } else {
-        console.error("Failed to delete transaction.");
-        Swal.fire({
-          icon: "error",
-          title: "Error!",
-          text: "Failed to delete transaction.",
-          confirmButtonText: "OK",
-        });
+      // 彈出確認框
+      const result = await Swal.fire({
+        title: "確認刪除",
+        text: "你確認刪除這個帳目嗎?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
+      });
+
+      // 如果user點擊
+      if (result.isConfirmed) {
+        console.log("Transaction ID:", transactionId);
+        const deleteResponse = await fetch(
+          `/api/transactions/TransactionStatus?transactionId=${transactionId}`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("access_token"),
+            },
+          }
+        );
+
+        if (deleteResponse.ok) {
+          Swal.fire({
+            icon: "success",
+            title: "成功!",
+            text: "帳目已被成功刪除",
+            confirmButtonText: "OK",
+          }).then(() => {
+            // 跳轉到顯示類別畫面
+            window.location.href = "/admin/home.html";
+            //如果按鈕被點擊，則傳遞訊息到AddTransaction Hub
+            console.log("Transaction deleted successfully");
+          });
+        } else {
+          console.error("Failed to delete transaction.");
+          Swal.fire({
+            icon: "error",
+            title: "Error!",
+            text: "Failed to delete transaction.",
+            confirmButtonText: "OK",
+          });
+        }
       }
     });
 
@@ -64,13 +86,21 @@ document.addEventListener("DOMContentLoaded", async function () {
       const amountElement = document.getElementById("amount");
       const dayElement = document.getElementById("day");
       const detailsElement = document.getElementById("details");
+      const recordedByElement = document.getElementById("recordedBy");
 
-      if (accountElement && categoryElement && amountElement && dayElement) {
+      if (
+        accountElement &&
+        categoryElement &&
+        amountElement &&
+        dayElement &&
+        recordedByElement
+      ) {
         accountElement.textContent = trasactionDetails.accountBookName;
         categoryElement.textContent = trasactionDetails.categoryName;
         amountElement.textContent = trasactionDetails.amount;
         dayElement.textContent = dateOnlyString;
         detailsElement.textContent = trasactionDetails.details;
+        recordedByElement.textContent = trasactionDetails.userName;
       }
     } else {
       console.error("Failed to fetch transaction details.");

@@ -2,7 +2,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Members Managemaent</title>
+    <title>Category Managemaent</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.7/dist/sweetalert2.min.css"
@@ -18,6 +18,7 @@
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="../Adminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
     <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/styles/other.css">
   </head>
   <body>
     <div class="wapper">
@@ -34,10 +35,12 @@
         </ul>
         <ul class="navbar-nav ml-auto">
           <li class="nav-item dropdown">
-            <a href="/admin/notification.html">
+            <!-- <a href="/admin/notification.html">
               <i class="far fa-bell "></i>
-              <!-- <span class="badge badge-warning navbar-badge">15</span> -->
-            </a>
+            </a> -->
+            <div id="logout">
+              <i class="fas fa-sign-out-alt" >登出</i>
+            </div>
           </li>
         </ul>
       </nav>
@@ -47,39 +50,63 @@
         <section class="content">
           <div class="container">
             <div class="card-header">
-              <h3><b>成員管理頁</b></h3>
-          </div>
-              <div class="card-body box-profile">             
+              <h3><b>帳本類別管理頁</b></h3>
+              <h4>帳本名稱: 
+                 <span id="AccountBookName"></span>
+              </h4>
+            </div>
+            <div class="card card-primary card-outline card-info">
+              <div class="card-body box-profile" style="height: 600px !important;">               
                   <ul class="list-group list-group-unbordered mb-3">
-                      <div id="accountBookContainer-${accountBook.accountBookId}">
-                          <ul id="accountBookList" class="list-group">
-                              <!-- Account book items will be added here -->
-                          </ul>
+                    <div class="card-body table-responsive p-0" style="height: 590px;">
+                        <table class="table table-head-fixed text-nowrap">
+                          <thead>
+                            <tr>
+                            <th>名稱</th>
+                            <th>類型</th>
+                            <th></th>
+                            </tr>
+                          </thead>
+                          <tbody id="categoryTableBody">
+                            <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                   </ul>
               </div>
+            </div>
           </div>
       </section>
-      
+      <button  class="button22" style="position:fixed; right: 20px; bottom: 20px; height: 40px; width: 100px !important;">
+        <a href="/admin/add_category.html" style=" color: #242d35 !important;">
+          <!-- <i class="nav-icon fas fa-plus-circle"></i> -->
+          新增類別
+        </a>
+      </button>
     </div>
     </div>
-    <!-- Main Sidebar Container -->
-    <aside class="main-sidebar sidebar-dark-primary elevation-4">
-      <!-- Brand Logo -->
-      <a href="index3.html" class="brand-link bg-cyan text-sm">
-        <img src="../Adminlte/dist/img/weblogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <h5><span class="brand-text font-weight-light">Show Me the Money</span></h5>
-      </a>
+   <!-- Main Sidebar Container -->
+   <aside class="main-sidebar sidebar-dark-primary elevation-4" style="position:fixed; background-color:#242d35!important; overflow-y: clip!important">
+    <!-- Brand Logo -->
+    <a href="/admin/home.html" class="brand-link bg-cyan text-sm" style="background-color:#E6E1C5!important">
+      <img src="../Adminlte/dist/img/weblogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+      <!-- <h5><span class="brand-text font-weight-light">Show Me the Money</span></h5> -->
+      <img src="../Adminlte/dist/img/projectLogo.png" alt="Project Logo" class="custom-image">
+    </a>
 
       <!-- Sidebar -->
       <div class="sidebar">
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
           <div class="image">
-            <img src="../Adminlte/dist/img/user6-128x128.jpg" class="img-circle elevation-2" alt="User Image">
+            <img class="img-circle elevation-2" alt="User Image" id="User Image" style="width: 3rem !important;">
           </div>
           <div class="info">
-            <a href="#" class="d-block">michelin</a>
+            <a href="/admin/user_profile.html" class="d-block" id="username" style="font-size: 20px; margin-left:18px !important;"></a>
           </div>
         </div>
 
@@ -90,75 +117,21 @@
             <!-- Add icons to the links using the .nav-icon class
                 with font-awesome or any other icon font library -->
             <li class="nav-item">
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="./index.html" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Dashboard v1</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="./index2.html" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Dashboard v2</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="./index3.html" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Dashboard v3</p>
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <li class="nav-item">
-              <a href="/admin/account_book.html" class="nav-link">
-                <i class="nav-icon fas fa-th"></i>
+              <a href="/admin/AccountBook Management.html" class="nav-link">
+                <i class="nav-icon fas fa-book white-icon"></i>
                 <p>
-                  Account
+                  帳本管理
                 </p>
               </a>
             </li>
-            <li class="nav-item">
-              <a href="/admin/chart.html" class="nav-link">
-                <i class="nav-icon fas fa-chart-pie"></i>
-                <p>
-                  Charts
-                </p>
-              </a>
-            </li>
-          </li>
-            <li class="nav-item">
-              <a href="/admin/category.html" class="nav-link">
-                <i class="nav-icon fas fa-table"></i>
-                <p>
-                  Categories
-                </p>
-              </a>                
             <li class="nav-item">
               <a href="/admin/history.html" class="nav-link">
-                <i class="nav-icon far fa-calendar-alt"></i>
+                <i class="nav-icon fas fa-history white-icon"></i>
                 <p>
-                  History
+                  歷史編輯紀錄
                 </p>
               </a>
             </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon far fa-image"></i>
-                <p>
-                  Members
-                </p>
-              </a>
-            </li>
-            <!-- <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon far fa-envelope"></i>
-                <p>
-                  Notifications
-                </p>
-              </a>
-            </li>              -->
           </ul>
         </nav>
         <!-- /.sidebar-menu -->
@@ -182,8 +155,10 @@
        <!-- AdminLTE App -->
        <script src="../Adminlte/dist/js/adminlte.js"></script>
        <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.11/signalr.min.js"></script>
-      <script src="/script/member.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+       <script src="/script/token_validation.js"></script>
+       <script src="/script/category_management.js"></script>
+      <script src="/script/user_bar_name.js"></script>
     </div>
   </body>
 </html>

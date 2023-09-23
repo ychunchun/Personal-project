@@ -41,7 +41,7 @@ namespace Personal_project.Controllers
 
             //根據當前頁面user的token，透過Members table給出其所擁有的AccountBook資訊
             var accountbooks = await _dbcontext.Members
-                .Where(m => m.user_id == user.user_id)
+                .Where(m => m.user_id == user.user_id  && m.member_status == "live") // 如果成員離開帳本，該成員就看不到該帳本
                 .Join(_dbcontext.AccountBooks,
                     member=>member.account_book_id,
                     accountBook=>accountBook.account_book_id,
@@ -88,7 +88,7 @@ namespace Personal_project.Controllers
                         string userNameDisplay = memberUser.user_name;
                         if (member.user_id == user.user_id) 
                         {
-                            userNameDisplay += " (You)";
+                            userNameDisplay += " (你)";
                         }
 
                         if (memberUser != null)
@@ -96,8 +96,10 @@ namespace Personal_project.Controllers
                             memberRolesAndUserNames.Add(new MemberRoleAndUserNameDTO
                             {
                                 Role = member.role,
+                                UserId= (int)member.user_id,
                                 UserName = userNameDisplay,
-                                MemberId=member.member_id
+                                MemberId=member.member_id,
+                                Image=member.user.profile_image
                             });
                         }
                     }
@@ -106,18 +108,19 @@ namespace Personal_project.Controllers
                 //計算每個帳本所擁有帳目的profit
                 var transactions = await _dbcontext.Transactions
                     .Where(t => t.account_book_id == accountBook.AccountBookId)
-                    .Join(_dbcontext.Categories,
-                        transaction => transaction.category_id,
-                        category => category.category_id,
-                        (transaction, category) => new
+                    .Join(_dbcontext.CategoryAndAccount,
+                        transaction => transaction.category_and_account_id,
+                        caa => caa.category_and_account_id,
+                        (transaction, caa) => new
                         {
                             TransactionAmount = transaction.amount,
-                            CategoryType = category.category_type
+                            CategoryType = caa.category.category_type,
+                            CategoryAndAccount_id=caa.category_and_account_id
                         })
                     .ToListAsync();
 
-                var expenses = transactions.Where(t => t.CategoryType == "expense").Sum(t => t.TransactionAmount);
-                var incomes = transactions.Where(t => t.CategoryType == "income").Sum(t => t.TransactionAmount);
+                var expenses = transactions.Where(t => t.CategoryType == "支出").Sum(t => t.TransactionAmount);
+                var incomes = transactions.Where(t => t.CategoryType == "收入").Sum(t => t.TransactionAmount);
 
                 var profit = incomes - expenses + accountBook.InitialBalance;
                 totalProfit += (int)profit; //計算所有帳本總和
@@ -130,7 +133,9 @@ namespace Personal_project.Controllers
                     InitialBalance = accountBook.InitialBalance,
                     AdminUser=accountBook.AdminUser,
                     Profit = profit,
-                    Members = memberRolesAndUserNames
+                    Expenses=expenses,
+                    Income=incomes,
+                    Members = memberRolesAndUserNames,
                 });
             }
 
@@ -152,7 +157,7 @@ namespace Personal_project.Controllers
                 return NotFound();
             }
 
-            // Create and add new account book
+            // 新增帳本
             var newAccountBook = new AccountBooks
             {
                 account_book_name = input.AccountBookName,
@@ -164,6 +169,33 @@ namespace Personal_project.Controllers
 
             _dbcontext.AccountBooks.Add(newAccountBook);
             await _dbcontext.SaveChangesAsync();
+
+
+            // 預設要給的帳本類別
+            var defaultCategoryIds = new List<int> { 1, 2, 12, 15, 31, 33 }; 
+
+            foreach (var categoryId in defaultCategoryIds)
+            {
+                // 透過 category_id，在 Categories table 獲取預設類別的資訊
+                var defaultCategory = await _dbcontext.Categories
+                    .FirstOrDefaultAsync(category => category.category_id == categoryId);
+
+                if (defaultCategory != null)
+                {
+                    // 新增預設的類別到 CategoryAndAccount table
+                    var newCategoryAndAccount = new CategoryAndAccount
+                    {
+                        account_id = newAccountBook.account_book_id,
+                        category_id = defaultCategory.category_id,
+                        category_status = "live"
+                    };
+
+                    _dbcontext.CategoryAndAccount.Add(newCategoryAndAccount);
+                }
+            }
+
+            await _dbcontext.SaveChangesAsync();
+
 
             // 新增帳本的同時，也加入admin的資料到Members table
             var newMember = new Members
@@ -216,6 +248,36 @@ namespace Personal_project.Controllers
                     // 如果不是admin，則不能刪除
                     return Forbid(); 
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception: " + ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpPost("UpdateAccountBook")]
+        public async Task<ActionResult> UpdateAccountBook(AccountBookUpdateDto input)
+        {
+            try
+            {
+                var existingAccountBook = await _dbcontext.AccountBooks
+                    .FirstOrDefaultAsync(a => a.account_book_id == input.AccountBookId);
+
+                if (existingAccountBook == null)
+                {
+                    return NotFound("AccountBook not found");
+                }
+
+                // 更新交易屬性值
+                existingAccountBook.account_book_name = input.AccountBookName;
+                existingAccountBook.initial_balance = input.InitialBalance;
+
+                await _dbcontext.SaveChangesAsync();
+
+                // 返回更新後的交易記錄
+                return Ok(existingAccountBook);
             }
             catch (Exception ex)
             {

@@ -4,8 +4,9 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Personal_project.Models;
+using System.Security.Claims;
 
-namespace YourProjectName.Controllers
+namespace Personal_projecttName.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -20,19 +21,27 @@ namespace YourProjectName.Controllers
 
         //////////顯示category////////////
        [HttpGet("GetCategory")]
-        public async Task<IActionResult> GetCategories(string displayType)
+        public async Task<IActionResult> GetCategories(string? displayType, int accountBookId)
         {
-            var categoriesQuery = _dbcontext.Categories.AsQueryable();
+            var query = _dbcontext.CategoryAndAccount
+                .Where(caa => accountBookId <= 0 || caa.account_id == accountBookId) //如果不是空值，就接下去判斷。如果是空值就會跳出
+                .Where(caa => caa.category_status == "live") ;
 
+            // 只有在提供 displayType參數時，才會增加類別過濾條件，否則全部列出 
             if (!string.IsNullOrEmpty(displayType))
             {
-                categoriesQuery = categoriesQuery.Where(category => category.category_type == displayType);
+                query = query.Where(caa => caa.category.category_type == displayType);
             }
 
-            var categories = await categoriesQuery
-                .Select(category => new CategoryGetDto { category_name = category.category_name })
-                .ToListAsync();
-
+            var categories = await query
+                .Select(caa => new CategoryGetDto
+                {
+                    display_category_type = caa.category.category_type,
+                    category_name = caa.category.category_name,
+                    category_and_account_id=caa.category_and_account_id,
+                    accountBookName=caa.account.account_book_name,
+                })
+        .ToListAsync();
             return Ok(categories);
         }
 
@@ -40,6 +49,12 @@ namespace YourProjectName.Controllers
         [HttpPost("AddCategory")]
         public async Task<IActionResult> AddCategory(CategoryAddDto input)
         {
+            if (input == null)
+            {
+                return BadRequest("無效輸入");
+            }
+
+            //創建新的category紀錄
             var newCategory = new Categories
             {
                 category_type = input.category_type,
@@ -49,7 +64,44 @@ namespace YourProjectName.Controllers
             _dbcontext.Categories.Add(newCategory);
             await _dbcontext.SaveChangesAsync();
 
-            return Ok(newCategory);
+            //創建新的CategoryAndAccount紀錄
+             var newCategoryAndAccount = new CategoryAndAccount
+            {
+                category_id = newCategory.category_id, 
+                account_id = input.account_book_id,
+                category_status="live"
+            };
+
+            _dbcontext.CategoryAndAccount.Add(newCategoryAndAccount);
+            await _dbcontext.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpPost("CategoryStatus")]
+        public async Task<ActionResult> CategoryStatus([FromBody] CategoryStatusDTO dto)
+        {
+             try
+            {
+                var category = await _dbcontext.CategoryAndAccount
+                    .FirstOrDefaultAsync(c => c.category_and_account_id == dto.category_and_account_id);
+
+                if (category != null)
+                {
+                    category.category_status = "delete";
+                    await _dbcontext.SaveChangesAsync();
+
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

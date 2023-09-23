@@ -12,8 +12,8 @@ document.addEventListener("DOMContentLoaded", function () {
   loginButton.addEventListener("click", async function (event) {
     event.preventDefault(); // 阻止表單的預設提交行為
 
-    const email = document.querySelector('[placeholder="Email"]').value;
-    const password = document.querySelector('[placeholder="Password"]').value;
+    const email = document.querySelector('[placeholder="信箱"]').value;
+    const password = document.querySelector('[placeholder="密碼"]').value;
 
     const loginData = {
       provider: "native",
@@ -49,17 +49,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
         Swal.fire({
           icon: "success",
-          title: "Success!",
-          text: "Logged in successfully.",
+          title: "成功!",
+          text: "登入成功",
           confirmButtonText: "OK",
         }).then(() => {
+          localStorage.removeItem("accessToken");
           window.location.href = "/admin/home.html";
         });
       } else {
         Swal.fire({
           icon: "error",
-          title: "Error!",
-          text: "Failed to log in.",
+          title: "錯誤",
+          text: "登入失敗",
           confirmButtonText: "OK",
         });
       }

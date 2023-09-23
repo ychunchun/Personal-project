@@ -2,8 +2,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Add Transaction</title>
-    <link rel="stylesheet" href="/styles/add_transaction.css" />
+    <title>User Profile</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.7/dist/sweetalert2.min.css"
@@ -19,6 +18,7 @@
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="../Adminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
     <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/styles/other.css">
   </head>
   <body>
     <div class="wapper">
@@ -35,42 +35,49 @@
         </ul>
         <ul class="navbar-nav ml-auto">
           <li class="nav-item dropdown">
-            <a href="/admin/notification.html">
+            <!-- <a href="/admin/notification.html">
               <i class="far fa-bell "></i>
-              <!-- <span class="badge badge-warning navbar-badge">15</span> -->
-            </a>
+            </a> -->
+            <div id="logout">
+              <i class="fas fa-sign-out-alt" >登出</i>
+            </div>
           </li>
         </ul>
       </nav>
 
       <!-- maincontent -->
-      <div class="content-wrapper">
-      <section class="content">
-        <div class="container">
-            <div class="card card-primary card-outline">
+      <form id="profile-form" enctype="multipart/form-data">
+        <div class="content-wrapper">
+          <section class="content">
+            <div class="container">
+              <div class="card card-outline card-info">
                 <div class="card-body box-profile">
-                <div class="text-center">
-                <img class="profile-user-img img-fluid img-circle" src="../Adminlte/dist/img/user6-128x128.jpg" alt="User profile picture">
+                  <div class="text-center">
+                    <div class="image-container" id="image-container">
+                      <img class="profile-user-img img-fluid img-circle" alt="User profile picture" id="User profile picture" onclick="openImageUploader()">
+                      <input type="file" id="file-input" style="display: none;" accept="image/*" onchange="handleImageUpload(event)">
+                      <div class="edit-text">編輯</div>
+                    </div>
+                  </div>
+                  <h3 class="profile-username text-center" id="username-card" style="font-size: 25px!important;"></h3>
+                  <ul class="list-group list-group-unbordered mb-3">
+                    <li class="list-group-item">
+                      <b class="float-left">Email</b> <a class="float-right" id="email" style="color:#505962 !important"></a>
+                    </li>
+                  </ul>
                 </div>
-                <h3 class="profile-username text-center" id="username"></h3>
-                <ul class="list-group list-group-unbordered mb-3">
-                <li class="list-group-item">
-                <b class="float-left">Email</b> <a class="float-right" id="email"></a>
-                </li>
-                </ul>
-                <a href="#" class="btn btn-primary btn-block"><b>Log out</b></a>
-                </div>
-                
-                </div>
+              </div>
+            </div>
+          </section>
         </div>
-      </section>
-    </div>
+      </form>
     <!-- Main Sidebar Container -->
-    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <aside class="main-sidebar sidebar-dark-primary elevation-4 " style="position:fixed; background-color:#242d35!important; overflow-y: clip!important">
       <!-- Brand Logo -->
-      <a href="index3.html" class="brand-link bg-cyan text-sm">
+      <a href="/admin/home.html" class="brand-link bg-cyan text-sm" style="background-color:#E6E1C5!important">
         <img src="../Adminlte/dist/img/weblogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <h5><span class="brand-text font-weight-light">Show Me the Money</span></h5>
+        <!-- <h5><span class="brand-text font-weight-light">Show Me the Money</span></h5> -->
+        <img src="../Adminlte/dist/img/projectLogo.png" alt="Project Logo" class="custom-image">
       </a>
 
       <!-- Sidebar -->
@@ -78,97 +85,35 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
           <div class="image">
-            <img src="../Adminlte/dist/img/user6-128x128.jpg" class="img-circle elevation-2" alt="User Image">
+            <img class="img-circle elevation-2" alt="User Image" id="User Image" style="width: 3rem !important;">
           </div>
           <div class="info">
-            <a href="#" class="d-block">michelin</a>
+            <a href="/admin/user_profile.html" class="d-block" id="username" style="font-size: 20px; margin-left:18px !important;"></a>
           </div>
         </div>
 
 
-        <!-- Sidebar Menu -->
-        <nav class="mt-2">
+         <!-- Sidebar Menu -->
+         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <!-- Add icons to the links using the .nav-icon class
                 with font-awesome or any other icon font library -->
             <li class="nav-item">
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="./index.html" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Dashboard v1</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="./index2.html" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Dashboard v2</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="./index3.html" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Dashboard v3</p>
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <li class="nav-item">
-              <a href="../Adminlte/pages/widgets.html" class="nav-link">
-                <i class="nav-icon fas fa-th"></i>
+              <a href="/admin/AccountBook Management.html" class="nav-link">
+                <i class="nav-icon fas fa-book white-icon"></i>
                 <p>
-                  Account
+                 帳本管理
                 </p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-chart-pie"></i>
+              <a href="/admin/history.html" class="nav-link">
+                <i class="nav-icon fas fa-history white-icon"></i>
                 <p>
-                  Charts
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="../Adminlte/pages/charts/chartjs.html" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>ChartJS</p>
-                  </a>
-                </li>
-              </ul>
-            </li>
-          </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-table"></i>
-                <p>
-                  Categories
-                </p>
-              </a>                
-            <li class="nav-item">
-              <a href="../Adminlte/pages/calendar.html" class="nav-link">
-                <i class="nav-icon far fa-calendar-alt"></i>
-                <p>
-                  History
+                  歷史編輯紀錄
                 </p>
               </a>
             </li>
-            <li class="nav-item">
-              <a href="../Adminlte/pages/gallery.html" class="nav-link">
-                <i class="nav-icon far fa-image"></i>
-                <p>
-                  Members
-                </p>
-              </a>
-            </li>
-            <!-- <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon far fa-envelope"></i>
-                <p>
-                  Notifications
-                </p>
-              </a>
-            </li>              -->
           </ul>
         </nav>
         <!-- /.sidebar-menu -->
@@ -191,8 +136,11 @@
        <!-- AdminLTE App -->
        <script src="../Adminlte/dist/js/adminlte.js"></script>
        <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.11/signalr.min.js"></script>
-      <script src="/script/user_profile.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+       <script src="/script/token_validation.js"></script>
+       <script src="/script/user_bar_name.js"></script>
+       <script src="/script/profile_image.js"></script>
+       <script src="/script/user_profile.js"></script>
     </div>
   </body>
 </html>

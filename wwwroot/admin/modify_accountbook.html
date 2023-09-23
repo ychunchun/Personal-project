@@ -1,8 +1,8 @@
 <!DOCTYPE html>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Add Account Book</title>
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
+    <title>Modify Account Book</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.7/dist/sweetalert2.min.css"
@@ -35,7 +35,7 @@
         </ul>
         <ul class="navbar-nav ml-auto">
           <li class="nav-item dropdown">
-              <!-- <a href="/admin/notification.html">
+            <!-- <a href="/admin/notification.html">
               <i class="far fa-bell "></i>
             </a> -->
             <div id="logout">
@@ -51,7 +51,7 @@
             <div class="container">
                 <div class="card card-primary card-outline card-info">
                     <div class="card-header">
-                        <h3><b>新增帳本</b></h3>
+                        <h3><b>修改帳本</b></h3>
                     </div>
                     <div class="card-body box-profile">             
                         <ul class="list-group list-group-unbordered mb-3">
@@ -61,21 +61,21 @@
                                   <div class="form-group row">
                                     <label for="inputEmail3" class="col-sm-2 col-form-label">帳本名稱</label>
                                       <div class="col-sm-10">
-                                        <input type="accountbookname" class="form-control" id="accountbookname" placeholder="請填寫帳本名稱" required title="請填寫帳本名稱">
+                                        <input type="accountbookname" class="form-control" id="accountbookname" placeholder="請填寫帳本名稱" required title="請填寫帳本名稱" pattern="[A-Za-z0-9\u4e00-\u9fa5!@#$%^&*()_+{}|:;<>,.?~-=]" maxlength="20"  required>
                                       </div>
                                   </div>
                                   <div class="form-group row">
                                     <label for="inputEmail3" class="col-sm-2 col-form-label">帳本初始金額</label>
                                       <div class="col-sm-10">
-                                        <input type="initialbalance" class="form-control" id="initialbalance" placeholder="填寫帳本初始金額" required title="請填寫初始金額">
+                                        <input type="initialbalance" class="form-control" id="initialbalance" placeholder="填寫帳本初始金額" required title="請填寫初始金額" maxlength="9" required>
                                       </div>
                                   </div>                               
                                 </div>
                             </li>
                         </ul>
-                        <button type="submit" href="/admin/AccountBook Management.html" class="btn btn-info btn-block delete-button" style="background-color:#e6e1c5; color:#505962; border-color: #505962 !important;">
+                        <button id="update-button" type="submit" class="btn btn-info btn-block delete-button" style="background-color:#e6e1c5; color:#505962; border-color: #505962 !important;">
                         <!-- <a href="/admin/account_book.html" > </a> -->
-                          <b>新增</b>
+                          <b>修改</b>
                         </button>
                       </form>
                     </div>
@@ -93,17 +93,17 @@
       <img src="../Adminlte/dist/img/projectLogo.png" alt="Project Logo" class="custom-image">
     </a>
 
-           <!-- Sidebar -->
-     <div class="sidebar">
-      <!-- Sidebar user panel (optional) -->
-      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <img class="img-circle elevation-2" alt="User Image" id="User Image" style="width: 3rem !important;">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <!-- Sidebar user panel (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+          <div class="image">
+            <img class="img-circle elevation-2" alt="User Image" id="User Image" style="width: 3rem !important;">
+          </div>
+          <div class="info">
+            <a href="/admin/user_profile.html" class="d-block" id="username" style="font-size: 20px; margin-left:18px !important;"></a>
+          </div>
         </div>
-        <div class="info">
-          <a href="/admin/user_profile.html" class="d-block" id="username" style="font-size: 20px; margin-left:18px !important;"></a>
-        </div>
-      </div>
 
 
        <!-- Sidebar Menu -->
@@ -152,7 +152,7 @@
        <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.11/signalr.min.js"></script>
        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
        <script src="/script/token_validation.js"></script>
-       <script src="/script/add_accountbook.js"></script>
+       <script src="/script/modify_accountbook.js"></script>
       <script src="/script/user_bar_name.js"></script>
     </div>
   </body>

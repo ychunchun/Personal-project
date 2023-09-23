@@ -15,6 +15,8 @@ public partial class Users
 
     public string? provider { get; set; }
 
+    public string? profile_image { get; set; }
+
     public virtual ICollection<AccountBooks> AccountBooks { get; set; } = new List<AccountBooks>();
 
     public virtual ICollection<History> History { get; set; } = new List<History>();
